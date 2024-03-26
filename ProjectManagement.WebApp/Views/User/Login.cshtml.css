@@ -1,0 +1,36 @@
+.flex-container {
+    height: 100vh;
+    display: flex;
+    background: #8e2de2;
+    background: -webkit-linear-gradient(to right, #8e2de2,
+    #4a00e0);
+    background: linear-gradient(to right, #8e2de2,
+    #4a00e0);
+}
+
+.flex-container>.item {
+    flex-grow: 2;
+}
+
+.flex-container>.item:nth-child(2) {
+    flex-grow: 1;
+    align-self: center;
+    background-color: white;
+    padding: 4rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    border-radius: 1.5rem;
+    max-width: 36rem;
+}
+
+#login-submit{
+    border-radius: 1.5rem;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+}
+
+.login-header{
+    text-align: center;
+    background-color: transparent;
+    margin-bottom: 1.5rem;
+}
