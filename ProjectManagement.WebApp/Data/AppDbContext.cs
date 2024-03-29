@@ -327,27 +327,27 @@ namespace ProjectManagement.WebApp.Data
                            {
                                Id = roleIds["admin"],
                                CreatedOn = DateTime.Now,
-                               Name = "Admin",
+                               Name = "admin",
                                NormalizedName = "ADMIN",
                            },
                            new AppRole
                            {
                                Id = roleIds["project-manager"],
                                CreatedOn = DateTime.Now,
-                               Name = "Project Manager",
+                               Name = "project-manager",
                                NormalizedName = "PROJECT-MANAGER",
                            }, new AppRole
                            {
                                Id = roleIds["user"],
                                CreatedOn = DateTime.Now,
-                               Name = "User",
+                               Name = "user",
                                NormalizedName = "USER",
                            },
                            new AppRole
                            {
                                Id = roleIds["project-user"],
                                CreatedOn = DateTime.Now,
-                               Name = "Project User",
+                               Name = "project-user",
                                NormalizedName = "PROJECT-USER",
                            });
         }
