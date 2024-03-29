@@ -13,7 +13,7 @@ using ProjectManagement.WebApp.Models.ViewModels;
 
 namespace ProjectManagement.WebApp.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="admin")]
     public class AdminController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -61,7 +61,7 @@ namespace ProjectManagement.WebApp.Controllers
                 IsAssigned = userRoles.Any(a => a == s.Name)
             }).ToListAsync();
 
-            return View(new UserRolesViewModel (){ Id = user.Id, Roles = roles });
+            return View(new UserRolesViewModel (){ Id = user.Id.ToString(), Roles = roles });
         }
 
         [HttpPost]

@@ -1,0 +1,20 @@
+﻿using Microsoft.Extensions.Hosting;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ProjectManagement.WebApp.Models.Entities
+{
+    public class Project : EntityBase
+    {
+        public string ProjectName { get; set; }
+        public string Description { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public string Status { get; set; }
+
+        public ICollection<ProjectUserAssociation> Users { get; set; } = new List<ProjectUserAssociation>();
+        public ICollection<Stage> Stages { get; set; } = new List<Stage>();
+        public ICollection<Cost> Costs { get; set; } = new List<Cost>();
+        public ICollection<Job> Jobs { get; set; } = new List<Job>();
+    }
+}
