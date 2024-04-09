@@ -1,8 +1,22 @@
-﻿@{
+﻿@using ProjectManagement.WebApp.Helpers.Identity;
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (User.IsInRole(AppRoles.Admin))
+{
+    <h2>Admin</h2>
+}
+else if (User.IsInRole(AppRoles.ProjectManager))
+{
+    <h2>Project Manager</h2>
+}
+else if (User.IsInRole(AppRoles.User))
+{
+    <h2>User</h2>
+}
+else if (User.IsInRole(AppRoles.ProjectUser))
+{
+    <h2>Project User</h2>
+}
