@@ -5,18 +5,26 @@ using ProjectManagement.WebApp.Models;
 
 namespace ProjectManagement.WebApp.Controllers;
 
-public class HomeController : Controller
+public class BoardController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger<BoardController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public BoardController(ILogger<BoardController> logger)
     {
         _logger = logger;
     }
 
-    [Authorize]
+    // [Authorize]
     public IActionResult Index()
     {
+        // gets all boards by specified id of workspace
+        return View();
+    }
+
+    // [Authorize]
+    public IActionResult GetDetailsOneBoard()
+    {
+        // gets information of specified board  
         return View();
     }
 
