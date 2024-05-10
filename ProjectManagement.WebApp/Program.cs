@@ -71,6 +71,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Board}/{action=GetDetailOneBoard}/{id?}");
+    pattern: "{controller=Workspace}/{action=Index}/{id?}");
 
 app.Run();
