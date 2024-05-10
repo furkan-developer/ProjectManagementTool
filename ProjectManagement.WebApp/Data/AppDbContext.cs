@@ -22,6 +22,7 @@ namespace ProjectManagement.WebApp.Data
         public DbSet<Job> Jobs { get; set; }
         public DbSet<Dependency> Dependencies { get; set; }
         public DbSet<Cost> Costs { get; set; }
+        public DbSet<ProjectUserAssociation> ProjectUserAssociations { get; set; }
 
         #endregion
 
