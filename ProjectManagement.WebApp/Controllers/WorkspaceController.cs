@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using ProjectManagement.WebApp.Data;
 using ProjectManagement.WebApp.Models.Entities;
 using ProjectManagement.WebApp.Models.Identity;
+using ProjectManagement.WebApp.Models.ViewModels;
 
 namespace ProjectManagement.WebApp.Controllers
 {
@@ -30,12 +31,14 @@ namespace ProjectManagement.WebApp.Controllers
                 throw new ApplicationException("");
             }
 
-            List<Project> projectsOfUser = appDbContext.ProjectUserAssociations
+            List<ListProjectsViewModel> projectsOfUser = appDbContext.ProjectUserAssociations
                 .Include(a => a.Project)
                 .Where(a => a.UserId == user.Id)
-                .Select(a => new Project()
+                .Select(a => new ListProjectsViewModel()
                 {
-                    ProjectName = a.Project.ProjectName
+                    Id = a.Project.Id,
+                    ProjectName = a.Project.ProjectName,
+                    Description = a.Project.Description
                 }).ToList();
 
             // gets projects list
