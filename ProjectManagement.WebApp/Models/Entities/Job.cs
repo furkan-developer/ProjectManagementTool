@@ -7,7 +7,7 @@
         public string AssignedTo { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime DueDate { get; set; }
-        public int Priority { get; set; }
+        public JobPriority Priority { get; set; }
         public string Status { get; set; }
 
 

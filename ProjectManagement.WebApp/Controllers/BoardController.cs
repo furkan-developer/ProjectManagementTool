@@ -1,8 +1,10 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProjectManagement.WebApp.Data;
 using ProjectManagement.WebApp.Models;
+using ProjectManagement.WebApp.Models.DTOs;
 using ProjectManagement.WebApp.Models.ViewModels;
 
 namespace ProjectManagement.WebApp.Controllers;
@@ -22,10 +24,22 @@ public class BoardController(AppDbContext appDbContext) : Controller
     }
 
     // [Authorize]
-    public IActionResult GetDetailsOneBoard()
+    public IActionResult GetDetailsOneBoard([FromQuery] Guid boardId)
     {
-        // gets information of specified board  
-        return View();
+        List<StageDto> StageDtos = appDbContext.Stages
+            .Where(s => s.BoardId == boardId)
+            .Select(s => new StageDto()
+            {
+                StageName = s.StageName,
+                jobDTOs = s.Jobs.Select(j => new JobDTO(){
+                    DueDate = j.DueDate,
+                    Title = j.Title,
+                    Priority = j.Priority,
+                }).ToList()
+            })
+            .ToList();
+
+        return View(new GetDetailsOneBoardViewModel(){stageDtos = StageDtos });
     }
 
     public IActionResult Privacy()
