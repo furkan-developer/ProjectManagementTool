@@ -13,12 +13,8 @@
 
         public Stage? Stage { get; set; }
         public Guid? StageId { get; set; }
-
-
-        public Guid ProjectId { get; set; }
-        public Project Project { get; set; }
-
-
+        
+        public ICollection<JobUserAssociation> Users { get; set; } = new List<JobUserAssociation>();
         public ICollection<Dependency> Dependencies { get; set; } = new List<Dependency>();
     }
 }

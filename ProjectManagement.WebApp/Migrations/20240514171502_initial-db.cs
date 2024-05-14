@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjectManagement.WebApp.Migrations
 {
     /// <inheritdoc />
-    public partial class initialdatabase : Migration
+    public partial class initialdb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -182,6 +182,26 @@ namespace ProjectManagement.WebApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Boards",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Boards", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Boards_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Costs",
                 columns: table => new
                 {
@@ -228,22 +248,46 @@ namespace ProjectManagement.WebApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BoardUserAssociations",
+                columns: table => new
+                {
+                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BoardId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BoardUserAssociations", x => new { x.BoardId, x.AppUserId });
+                    table.ForeignKey(
+                        name: "FK_BoardUserAssociations_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BoardUserAssociations_Boards_BoardId",
+                        column: x => x.BoardId,
+                        principalTable: "Boards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Stages",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StageName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BoardId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Stages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Stages_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
+                        name: "FK_Stages_Boards_BoardId",
+                        column: x => x.BoardId,
+                        principalTable: "Boards",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -261,18 +305,11 @@ namespace ProjectManagement.WebApp.Migrations
                     Priority = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StageId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Jobs", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Jobs_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Jobs_Stages_StageId",
                         column: x => x.StageId,
@@ -300,15 +337,39 @@ namespace ProjectManagement.WebApp.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "JobUserAssociations",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    JobId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JobUserAssociations", x => new { x.UserId, x.JobId });
+                    table.ForeignKey(
+                        name: "FK_JobUserAssociations_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_JobUserAssociations_Jobs_JobId",
+                        column: x => x.JobId,
+                        principalTable: "Jobs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "CreatedOn", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("5b51828b-0cd4-46d3-bdbe-0e09351c6f1f"), null, new DateTime(2024, 5, 10, 17, 51, 37, 180, DateTimeKind.Local).AddTicks(7875), "user", "USER" },
-                    { new Guid("9e86c716-36c1-4dbc-b078-5ed78a44f77a"), null, new DateTime(2024, 5, 10, 17, 51, 37, 180, DateTimeKind.Local).AddTicks(7873), "project-manager", "PROJECT-MANAGER" },
-                    { new Guid("a9a1f0ff-08f0-475c-85e4-2f0bfcc9bc72"), null, new DateTime(2024, 5, 10, 17, 51, 37, 180, DateTimeKind.Local).AddTicks(7860), "admin", "ADMIN" },
-                    { new Guid("cbc88acf-85aa-445f-aa71-498bd23f82e3"), null, new DateTime(2024, 5, 10, 17, 51, 37, 180, DateTimeKind.Local).AddTicks(7876), "project-user", "PROJECT-USER" }
+                    { new Guid("5d73cc5a-ace9-4b68-9679-435a9f778586"), null, new DateTime(2024, 5, 14, 20, 15, 1, 203, DateTimeKind.Local).AddTicks(6736), "user", "USER" },
+                    { new Guid("875ec79f-0081-4320-bbea-851c2de4fe24"), null, new DateTime(2024, 5, 14, 20, 15, 1, 203, DateTimeKind.Local).AddTicks(6721), "admin", "ADMIN" },
+                    { new Guid("96e5a4de-0181-4008-83f0-11becab3ce9b"), null, new DateTime(2024, 5, 14, 20, 15, 1, 203, DateTimeKind.Local).AddTicks(6738), "project-user", "PROJECT-USER" },
+                    { new Guid("ed3ac3ab-92f8-4a93-a45b-a25f0b4291c9"), null, new DateTime(2024, 5, 14, 20, 15, 1, 203, DateTimeKind.Local).AddTicks(6733), "project-manager", "PROJECT-MANAGER" }
                 });
 
             migrationBuilder.InsertData(
@@ -316,10 +377,10 @@ namespace ProjectManagement.WebApp.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "BirthDay", "ConcurrencyStamp", "CreatedOn", "Email", "EmailConfirmed", "FirstName", "Gender", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { new Guid("301d66e8-ed2b-47b4-972e-469156fd0a3e"), 0, new DateTime(2024, 5, 10, 17, 51, 37, 180, DateTimeKind.Local).AddTicks(8019), "0d9c6642-18a1-4eb0-9739-0dda0eb8ff28", new DateTime(2024, 5, 10, 17, 51, 37, 180, DateTimeKind.Local).AddTicks(8020), "aliyildiz@gmail.com", false, "Ali", 1, "Yildiz ", false, null, "ALIYILDIZ@GMAIL.COM", "ALIYILDIZ123", "AQAAAAIAAYagAAAAEGRfmyOQskjdcj2V6gtuUAlKdv7C1ibNPZyeeL6siwHVsUOqVbHo8OZSnt7wbTzjcQ==", null, false, "88fcb0ce-8b5c-441c-b15c-aaaad5b02c31", false, "aliyildiz123" },
-                    { new Guid("4aefbce4-2e4c-4846-af89-b8be2a24f382"), 0, new DateTime(2024, 5, 10, 17, 51, 37, 180, DateTimeKind.Local).AddTicks(8028), "2d1720a5-3fd1-439e-a937-a1a7fac98527", new DateTime(2024, 5, 10, 17, 51, 37, 180, DateTimeKind.Local).AddTicks(8029), "ayseyildiz@gmail.com", false, "Ayse", 2, "Yildiz", false, null, "AYSEYILDIZ@GMAIL.COM", "AYSEYILDIZ123", "AQAAAAIAAYagAAAAEGGMbDeiBH47Jl3eW2eeHfgbVX3IofULz8FGHijZn0It7ZSVxHrgLjkfZ3jmIt50PQ==", null, false, "dc8227e5-d394-4a6b-818e-6924da3436f9", false, "ayseyildiz123" },
-                    { new Guid("53399c6e-bafd-4562-9f97-9faeee2556b0"), 0, new DateTime(2024, 5, 10, 17, 51, 37, 180, DateTimeKind.Local).AddTicks(8012), "d38846c0-be78-4b87-89d6-6c5050a19116", new DateTime(2024, 5, 10, 17, 51, 37, 180, DateTimeKind.Local).AddTicks(8012), "admin@gmail.com", false, "Furkan", 1, "Aydin", false, null, "ADMIN@GMAIL.COM", "ADMIN", "AQAAAAIAAYagAAAAEIO5crOR5QQVAxZKos5O0Zcj9CYp5bZa6nnlndaQbTJ00GU+MeAx/vKQqnlr1/iUJg==", null, false, "97db5818-caaa-43c5-b55e-811254e9c944", false, "admin" },
-                    { new Guid("6275a2bf-80b2-48ed-bb8d-859bf38d22a8"), 0, new DateTime(2024, 5, 10, 17, 51, 37, 180, DateTimeKind.Local).AddTicks(8035), "7dbd38c7-ca8d-4af8-94cd-f076707dd3d7", new DateTime(2024, 5, 10, 17, 51, 37, 180, DateTimeKind.Local).AddTicks(8036), "esrefyildiz@gmail.com", false, "Esref", 2, "Yildiz", false, null, "ESREFYILDIZ@GMAIL.COM", "ESREFYILDIZ123", "AQAAAAIAAYagAAAAEKB8Ym56Pu89xQeVtXPNAvC9rImcioQzbV3xswfzbsQS5PDmOJshfFEno/QHwByhog==", null, false, "d566e8d0-0789-467a-9792-d673ab7775e0", false, "esrefyildiz123" }
+                    { new Guid("19fe6394-63c9-4c6b-b4ba-0081a864ac71"), 0, new DateTime(2024, 5, 14, 20, 15, 1, 203, DateTimeKind.Local).AddTicks(6954), "5d28fcd9-edfd-4805-8110-69e7689454cc", new DateTime(2024, 5, 14, 20, 15, 1, 203, DateTimeKind.Local).AddTicks(6955), "admin@gmail.com", false, "Furkan", 1, "Aydin", false, null, "ADMIN@GMAIL.COM", "ADMIN", "AQAAAAIAAYagAAAAEO/CWQMy5Sf6NeZ20e3JNgjVLa+XxwpN0cvcVIimkuyo8yxSssZKZL++SgxEaUT78w==", null, false, "6283a492-684d-4f77-8335-8839bf1bf2fd", false, "admin" },
+                    { new Guid("1d976577-2553-4c21-b1d9-681f31601d53"), 0, new DateTime(2024, 5, 14, 20, 15, 1, 203, DateTimeKind.Local).AddTicks(6971), "cecb6f4a-7709-4ee9-9c77-5dfce00faa97", new DateTime(2024, 5, 14, 20, 15, 1, 203, DateTimeKind.Local).AddTicks(6972), "ayseyildiz@gmail.com", false, "Ayse", 2, "Yildiz", false, null, "AYSEYILDIZ@GMAIL.COM", "AYSEYILDIZ123", "AQAAAAIAAYagAAAAEAA1yBP6BlvkpcP3xykXdoCYc5zAXXPrExr+E6mnE7clXsuBO9J/ADfk2t4sNfWY1Q==", null, false, "e7ea7f1a-d5c0-4654-b1f9-1fc1b119a517", false, "ayseyildiz123" },
+                    { new Guid("33c511d8-05fe-41cf-934a-1f662d685458"), 0, new DateTime(2024, 5, 14, 20, 15, 1, 203, DateTimeKind.Local).AddTicks(6965), "411a419e-a00b-496a-80c6-cfdf01329584", new DateTime(2024, 5, 14, 20, 15, 1, 203, DateTimeKind.Local).AddTicks(6965), "aliyildiz@gmail.com", false, "Ali", 1, "Yildiz ", false, null, "ALIYILDIZ@GMAIL.COM", "ALIYILDIZ123", "AQAAAAIAAYagAAAAEHgFZK6ZcBqB5CDBnYGuHvcjdt46B3f1eWFGWUxZg7Z0nBJYPL7gicsk16vQOl1E6g==", null, false, "c6a12ad0-1fac-4243-ac29-8c4c96554e08", false, "aliyildiz123" },
+                    { new Guid("4ba66a92-d3bf-4321-b7a2-f9041635edb7"), 0, new DateTime(2024, 5, 14, 20, 15, 1, 203, DateTimeKind.Local).AddTicks(6977), "5a0adf21-48ce-4153-9bfb-eabdb956894b", new DateTime(2024, 5, 14, 20, 15, 1, 203, DateTimeKind.Local).AddTicks(6978), "esrefyildiz@gmail.com", false, "Esref", 2, "Yildiz", false, null, "ESREFYILDIZ@GMAIL.COM", "ESREFYILDIZ123", "AQAAAAIAAYagAAAAEPwRXppIwx9ReqebiJcfXN4S1ptl9qsmo6EBFmXnXAD8T6yMysnnKACpGTl7fE7Erw==", null, false, "66c93748-fd2e-4c28-8d97-85e1dfbaa080", false, "esrefyildiz123" }
                 });
 
             migrationBuilder.InsertData(
@@ -327,8 +388,8 @@ namespace ProjectManagement.WebApp.Migrations
                 columns: new[] { "Id", "CreatedOn", "Description", "EndDate", "ProjectName", "StartDate", "Status" },
                 values: new object[,]
                 {
-                    { new Guid("a0faa350-a775-43e9-9e81-7efd508391eb"), new DateTime(2024, 5, 10, 17, 51, 37, 485, DateTimeKind.Local).AddTicks(8119), "A project to develop a stock tracking system", new DateTime(2024, 7, 9, 17, 51, 37, 485, DateTimeKind.Local).AddTicks(8118), "Stock Tracking Project", new DateTime(2024, 5, 10, 17, 51, 37, 485, DateTimeKind.Local).AddTicks(8117), "Planning" },
-                    { new Guid("e6e94437-0399-4f7c-bd58-0ec785e05dc7"), new DateTime(2024, 5, 10, 17, 51, 37, 485, DateTimeKind.Local).AddTicks(8113), "A project to create a blog site", new DateTime(2024, 6, 9, 17, 51, 37, 485, DateTimeKind.Local).AddTicks(8107), "Blog Site Project", new DateTime(2024, 5, 10, 17, 51, 37, 485, DateTimeKind.Local).AddTicks(8106), "InProgress" }
+                    { new Guid("6bee95c8-59ca-49f5-9a55-196eea3f3675"), new DateTime(2024, 5, 14, 20, 15, 1, 511, DateTimeKind.Local).AddTicks(7838), "A project to create a blog site", new DateTime(2024, 6, 13, 20, 15, 1, 511, DateTimeKind.Local).AddTicks(7832), "Blog Site Project", new DateTime(2024, 5, 14, 20, 15, 1, 511, DateTimeKind.Local).AddTicks(7831), "InProgress" },
+                    { new Guid("db141a69-550e-41b6-8b05-6b96bbc401bf"), new DateTime(2024, 5, 14, 20, 15, 1, 511, DateTimeKind.Local).AddTicks(7843), "A project to develop a stock tracking system", new DateTime(2024, 7, 13, 20, 15, 1, 511, DateTimeKind.Local).AddTicks(7842), "Stock Tracking Project", new DateTime(2024, 5, 14, 20, 15, 1, 511, DateTimeKind.Local).AddTicks(7842), "Planning" }
                 });
 
             migrationBuilder.InsertData(
@@ -336,19 +397,24 @@ namespace ProjectManagement.WebApp.Migrations
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("9e86c716-36c1-4dbc-b078-5ed78a44f77a"), new Guid("301d66e8-ed2b-47b4-972e-469156fd0a3e") },
-                    { new Guid("5b51828b-0cd4-46d3-bdbe-0e09351c6f1f"), new Guid("4aefbce4-2e4c-4846-af89-b8be2a24f382") },
-                    { new Guid("a9a1f0ff-08f0-475c-85e4-2f0bfcc9bc72"), new Guid("53399c6e-bafd-4562-9f97-9faeee2556b0") },
-                    { new Guid("cbc88acf-85aa-445f-aa71-498bd23f82e3"), new Guid("6275a2bf-80b2-48ed-bb8d-859bf38d22a8") }
+                    { new Guid("875ec79f-0081-4320-bbea-851c2de4fe24"), new Guid("19fe6394-63c9-4c6b-b4ba-0081a864ac71") },
+                    { new Guid("5d73cc5a-ace9-4b68-9679-435a9f778586"), new Guid("1d976577-2553-4c21-b1d9-681f31601d53") },
+                    { new Guid("ed3ac3ab-92f8-4a93-a45b-a25f0b4291c9"), new Guid("33c511d8-05fe-41cf-934a-1f662d685458") },
+                    { new Guid("96e5a4de-0181-4008-83f0-11becab3ce9b"), new Guid("4ba66a92-d3bf-4321-b7a2-f9041635edb7") }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Boards",
+                columns: new[] { "Id", "CreatedOn", "ProjectId", "Title" },
+                values: new object[] { new Guid("3fd76230-4287-460f-bcaf-6adffb1588a4"), new DateTime(2024, 5, 14, 20, 15, 1, 512, DateTimeKind.Local).AddTicks(349), new Guid("db141a69-550e-41b6-8b05-6b96bbc401bf"), "Front-end board" });
 
             migrationBuilder.InsertData(
                 table: "Costs",
                 columns: new[] { "Id", "Amount", "CreatedOn", "Date", "Description", "ProjectId" },
                 values: new object[,]
                 {
-                    { new Guid("d75a2d47-f8a0-4c88-b76c-d70bda25cf25"), 200.00m, new DateTime(2024, 5, 10, 17, 51, 37, 486, DateTimeKind.Local).AddTicks(734), new DateTime(2024, 5, 10, 17, 51, 37, 486, DateTimeKind.Local).AddTicks(733), "Sample cost", new Guid("a0faa350-a775-43e9-9e81-7efd508391eb") },
-                    { new Guid("e250b40c-cf2b-4ea0-a94f-60a2bd4d31f4"), 500.00m, new DateTime(2024, 5, 10, 17, 51, 37, 486, DateTimeKind.Local).AddTicks(578), new DateTime(2024, 5, 10, 17, 51, 37, 486, DateTimeKind.Local).AddTicks(574), "Sample cost", new Guid("e6e94437-0399-4f7c-bd58-0ec785e05dc7") }
+                    { new Guid("c7035b83-34a8-4db8-9449-a280d1384db9"), 500.00m, new DateTime(2024, 5, 14, 20, 15, 1, 512, DateTimeKind.Local).AddTicks(817), new DateTime(2024, 5, 14, 20, 15, 1, 512, DateTimeKind.Local).AddTicks(803), "Sample cost", new Guid("6bee95c8-59ca-49f5-9a55-196eea3f3675") },
+                    { new Guid("ee6f1afd-788a-4ec0-954a-edc2e47c5ce0"), 200.00m, new DateTime(2024, 5, 14, 20, 15, 1, 512, DateTimeKind.Local).AddTicks(867), new DateTime(2024, 5, 14, 20, 15, 1, 512, DateTimeKind.Local).AddTicks(867), "Sample cost", new Guid("db141a69-550e-41b6-8b05-6b96bbc401bf") }
                 });
 
             migrationBuilder.InsertData(
@@ -356,35 +422,35 @@ namespace ProjectManagement.WebApp.Migrations
                 columns: new[] { "ProjectId", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("a0faa350-a775-43e9-9e81-7efd508391eb"), new Guid("301d66e8-ed2b-47b4-972e-469156fd0a3e") },
-                    { new Guid("a0faa350-a775-43e9-9e81-7efd508391eb"), new Guid("4aefbce4-2e4c-4846-af89-b8be2a24f382") },
-                    { new Guid("e6e94437-0399-4f7c-bd58-0ec785e05dc7"), new Guid("301d66e8-ed2b-47b4-972e-469156fd0a3e") },
-                    { new Guid("e6e94437-0399-4f7c-bd58-0ec785e05dc7"), new Guid("6275a2bf-80b2-48ed-bb8d-859bf38d22a8") }
+                    { new Guid("6bee95c8-59ca-49f5-9a55-196eea3f3675"), new Guid("33c511d8-05fe-41cf-934a-1f662d685458") },
+                    { new Guid("6bee95c8-59ca-49f5-9a55-196eea3f3675"), new Guid("4ba66a92-d3bf-4321-b7a2-f9041635edb7") },
+                    { new Guid("db141a69-550e-41b6-8b05-6b96bbc401bf"), new Guid("1d976577-2553-4c21-b1d9-681f31601d53") },
+                    { new Guid("db141a69-550e-41b6-8b05-6b96bbc401bf"), new Guid("33c511d8-05fe-41cf-934a-1f662d685458") }
                 });
 
             migrationBuilder.InsertData(
                 table: "Stages",
-                columns: new[] { "Id", "CreatedOn", "Description", "ProjectId", "StageName" },
+                columns: new[] { "Id", "BoardId", "CreatedOn", "Description", "StageName" },
                 values: new object[,]
                 {
-                    { new Guid("1f443988-6e3e-4ca2-b58b-4792516fdc1d"), new DateTime(2024, 5, 10, 17, 51, 37, 485, DateTimeKind.Local).AddTicks(8225), "Planning stage for the stock tracking project", new Guid("a0faa350-a775-43e9-9e81-7efd508391eb"), "Planning" },
-                    { new Guid("ac30d0c1-95a9-4995-8c21-3b83f67f0830"), new DateTime(2024, 5, 10, 17, 51, 37, 485, DateTimeKind.Local).AddTicks(8221), "Design stage for the blog site project", new Guid("e6e94437-0399-4f7c-bd58-0ec785e05dc7"), "Design" }
+                    { new Guid("1844ad5e-40e0-4b97-8637-4039e735e79e"), new Guid("3fd76230-4287-460f-bcaf-6adffb1588a4"), new DateTime(2024, 5, 14, 20, 15, 1, 512, DateTimeKind.Local).AddTicks(570), "Design stage for the blog site project", "Home Page" },
+                    { new Guid("a868a6c7-3177-46b2-9a60-910798bd12cc"), new Guid("3fd76230-4287-460f-bcaf-6adffb1588a4"), new DateTime(2024, 5, 14, 20, 15, 1, 512, DateTimeKind.Local).AddTicks(574), "Planning stage for the stock tracking project", "Supplier Page" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Jobs",
-                columns: new[] { "Id", "AssignedTo", "CreatedOn", "Description", "DueDate", "Priority", "ProjectId", "StageId", "StartDate", "Status", "Title" },
+                columns: new[] { "Id", "AssignedTo", "CreatedOn", "Description", "DueDate", "Priority", "StageId", "StartDate", "Status", "Title" },
                 values: new object[,]
                 {
-                    { new Guid("4a180b37-2388-4054-8a12-cd90f886fc0f"), "John Doe", new DateTime(2024, 5, 10, 17, 51, 37, 486, DateTimeKind.Local).AddTicks(316), "Design user interface for the blog site", new DateTime(2024, 5, 17, 17, 51, 37, 486, DateTimeKind.Local).AddTicks(313), 1, new Guid("e6e94437-0399-4f7c-bd58-0ec785e05dc7"), new Guid("1f443988-6e3e-4ca2-b58b-4792516fdc1d"), new DateTime(2024, 5, 10, 17, 51, 37, 486, DateTimeKind.Local).AddTicks(312), "ToDo", "Design UI" },
-                    { new Guid("4d8c9cb9-aab7-4238-b2a4-c24130533cdf"), "John Doe", new DateTime(2024, 5, 10, 17, 51, 37, 486, DateTimeKind.Local).AddTicks(324), "Analyze requirements for the stock tracking project", new DateTime(2024, 5, 24, 17, 51, 37, 486, DateTimeKind.Local).AddTicks(323), 2, new Guid("a0faa350-a775-43e9-9e81-7efd508391eb"), new Guid("ac30d0c1-95a9-4995-8c21-3b83f67f0830"), new DateTime(2024, 5, 10, 17, 51, 37, 486, DateTimeKind.Local).AddTicks(323), "InProgress", "Requirement Analysis" },
-                    { new Guid("f696993f-d602-4225-9d1a-c5569319009e"), "John Doe", new DateTime(2024, 5, 10, 17, 51, 37, 486, DateTimeKind.Local).AddTicks(329), "Depend job", new DateTime(2024, 5, 24, 17, 51, 37, 486, DateTimeKind.Local).AddTicks(328), 2, new Guid("a0faa350-a775-43e9-9e81-7efd508391eb"), new Guid("ac30d0c1-95a9-4995-8c21-3b83f67f0830"), new DateTime(2024, 5, 10, 17, 51, 37, 486, DateTimeKind.Local).AddTicks(328), "Pending", "Depend job" }
+                    { new Guid("5507f6d8-b8ca-4883-bb97-37525f04b14c"), "John Doe", new DateTime(2024, 5, 14, 20, 15, 1, 512, DateTimeKind.Local).AddTicks(642), "Design user interface for the blog site", new DateTime(2024, 5, 21, 20, 15, 1, 512, DateTimeKind.Local).AddTicks(638), 1, new Guid("a868a6c7-3177-46b2-9a60-910798bd12cc"), new DateTime(2024, 5, 14, 20, 15, 1, 512, DateTimeKind.Local).AddTicks(637), "ToDo", "Design UI" },
+                    { new Guid("7f2f5f8e-5f37-479e-9c15-a6612335caa3"), "John Doe", new DateTime(2024, 5, 14, 20, 15, 1, 512, DateTimeKind.Local).AddTicks(655), "Analyze requirements for the stock tracking project", new DateTime(2024, 5, 28, 20, 15, 1, 512, DateTimeKind.Local).AddTicks(654), 2, new Guid("1844ad5e-40e0-4b97-8637-4039e735e79e"), new DateTime(2024, 5, 14, 20, 15, 1, 512, DateTimeKind.Local).AddTicks(653), "InProgress", "Requirement Analysis" },
+                    { new Guid("e756f68e-b3bb-471a-8545-09e3994824ec"), "John Doe", new DateTime(2024, 5, 14, 20, 15, 1, 512, DateTimeKind.Local).AddTicks(659), "Depend job", new DateTime(2024, 5, 28, 20, 15, 1, 512, DateTimeKind.Local).AddTicks(658), 2, new Guid("1844ad5e-40e0-4b97-8637-4039e735e79e"), new DateTime(2024, 5, 14, 20, 15, 1, 512, DateTimeKind.Local).AddTicks(658), "Pending", "Depend job" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Dependencies",
                 columns: new[] { "Id", "CreatedOn", "DependsOnJobId", "JobId" },
-                values: new object[] { new Guid("24a744b8-31d9-439c-ae85-2d4aa0bb561b"), new DateTime(2024, 5, 10, 17, 51, 37, 486, DateTimeKind.Local).AddTicks(438), new Guid("4d8c9cb9-aab7-4238-b2a4-c24130533cdf"), new Guid("f696993f-d602-4225-9d1a-c5569319009e") });
+                values: new object[] { new Guid("db44dc7d-ed26-4822-8f69-8c228060a43c"), new DateTime(2024, 5, 14, 20, 15, 1, 512, DateTimeKind.Local).AddTicks(751), new Guid("7f2f5f8e-5f37-479e-9c15-a6612335caa3"), new Guid("e756f68e-b3bb-471a-8545-09e3994824ec") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -426,6 +492,16 @@ namespace ProjectManagement.WebApp.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Boards_ProjectId",
+                table: "Boards",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BoardUserAssociations_AppUserId",
+                table: "BoardUserAssociations",
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Costs_ProjectId",
                 table: "Costs",
                 column: "ProjectId");
@@ -436,14 +512,14 @@ namespace ProjectManagement.WebApp.Migrations
                 column: "JobId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Jobs_ProjectId",
-                table: "Jobs",
-                column: "ProjectId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Jobs_StageId",
                 table: "Jobs",
                 column: "StageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JobUserAssociations_JobId",
+                table: "JobUserAssociations",
+                column: "JobId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectUserAssociations_UserId",
@@ -451,9 +527,9 @@ namespace ProjectManagement.WebApp.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Stages_ProjectId",
+                name: "IX_Stages_BoardId",
                 table: "Stages",
-                column: "ProjectId");
+                column: "BoardId");
         }
 
         /// <inheritdoc />
@@ -475,10 +551,16 @@ namespace ProjectManagement.WebApp.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "BoardUserAssociations");
+
+            migrationBuilder.DropTable(
                 name: "Costs");
 
             migrationBuilder.DropTable(
                 name: "Dependencies");
+
+            migrationBuilder.DropTable(
+                name: "JobUserAssociations");
 
             migrationBuilder.DropTable(
                 name: "ProjectUserAssociations");
@@ -494,6 +576,9 @@ namespace ProjectManagement.WebApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "Stages");
+
+            migrationBuilder.DropTable(
+                name: "Boards");
 
             migrationBuilder.DropTable(
                 name: "Projects");

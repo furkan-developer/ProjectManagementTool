@@ -12,9 +12,9 @@ namespace ProjectManagement.WebApp.Models.Entities
         public DateTime EndDate { get; set; }
         public string Status { get; set; }
 
+
+        public ICollection<Board> boards { get; set; } = new List<Board>();
         public ICollection<ProjectUserAssociation> Users { get; set; } = new List<ProjectUserAssociation>();
-        public ICollection<Stage> Stages { get; set; } = new List<Stage>();
         public ICollection<Cost> Costs { get; set; } = new List<Cost>();
-        public ICollection<Job> Jobs { get; set; } = new List<Job>();
     }
 }

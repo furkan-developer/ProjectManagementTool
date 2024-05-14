@@ -22,7 +22,10 @@ namespace ProjectManagement.WebApp.Data
         public DbSet<Job> Jobs { get; set; }
         public DbSet<Dependency> Dependencies { get; set; }
         public DbSet<Cost> Costs { get; set; }
+        public DbSet<Board> Boards { get; set; }
         public DbSet<ProjectUserAssociation> ProjectUserAssociations { get; set; }
+        public DbSet<BoardUserAssociation> BoardUserAssociations { get; set; }
+        public DbSet<JobUserAssociation> JobUserAssociations { get; set; }
 
         #endregion
 
@@ -33,6 +36,35 @@ namespace ProjectManagement.WebApp.Data
             base.OnModelCreating(builder);
 
             #region Relationships
+
+            builder.Entity<JobUserAssociation>().HasKey(ju => new { ju.UserId, ju.JobId });
+            builder.Entity<JobUserAssociation>()
+                .HasOne<AppUser>(ju => ju.User)
+                .WithMany(u => u.Jobs)
+                .HasForeignKey(ju => ju.UserId)
+                .IsRequired(required: true)
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<JobUserAssociation>()
+                .HasOne<Job>(ju => ju.Job)
+                .WithMany(j => j.Users)
+                .HasForeignKey(ju => ju.JobId)
+                .IsRequired(required: true)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<BoardUserAssociation>().HasKey(bu => new { bu.BoardId, bu.AppUserId });
+            builder.Entity<BoardUserAssociation>()
+                .HasOne<Board>(bu => bu.Board)
+                .WithMany(b => b.Users)
+                .HasForeignKey(bu => bu.BoardId)
+                .IsRequired(required: true)
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<BoardUserAssociation>()
+                .HasOne<AppUser>(bu => bu.AppUser)
+                .WithMany(u => u.Boards)
+                .HasForeignKey(bu => bu.AppUserId)
+                .IsRequired(required: true)
+                .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<ProjectUserAssociation>().HasKey(pu => new { pu.ProjectId, pu.UserId });
             builder.Entity<ProjectUserAssociation>()
                 .HasOne<AppUser>(pu => pu.User)
@@ -48,11 +80,11 @@ namespace ProjectManagement.WebApp.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Project>()
-               .HasMany(p => p.Stages)
-               .WithOne(s => s.Project)
-               .HasForeignKey(s => s.ProjectId)
-               .IsRequired(required: true)
-               .OnDelete(DeleteBehavior.Cascade);
+              .HasMany(p => p.boards)
+              .WithOne(b => b.Project)
+              .HasForeignKey(b => b.ProjectId)
+              .IsRequired(required: true)
+              .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Project>()
                 .HasMany(p => p.Costs)
@@ -61,19 +93,19 @@ namespace ProjectManagement.WebApp.Data
                 .HasForeignKey(c => c.ProjectId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<Project>()
-                .HasMany(s => s.Jobs)
-                .WithOne(t => t.Project)
-                .HasForeignKey(t => t.ProjectId)
-                .IsRequired(required: true)
-                .OnDelete(DeleteBehavior.Cascade);
-
             builder.Entity<Stage>()
                 .HasMany(s => s.Jobs)
                 .WithOne(j => j.Stage)
                 .HasForeignKey(j => j.StageId)
                 .IsRequired(required: false)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Stage>()
+                .HasOne(s => s.Board)
+                .WithMany(b => b.Stages)
+                .HasForeignKey(s => s.BoardId)
+                .IsRequired(required: true)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Job>()
                 .HasMany(j => j.Dependencies)
@@ -96,14 +128,15 @@ namespace ProjectManagement.WebApp.Data
             // These will use for data seeding in entity related
             Guid blogSiteProjectGuid = Guid.NewGuid();
             Guid stockTrackingProjectGuid = Guid.NewGuid();
-            Guid planStageGuid = Guid.NewGuid();
-            Guid designStageGuid = Guid.NewGuid();
+            Guid homePageStageGuid = Guid.NewGuid();
+            Guid supplierPageGuid = Guid.NewGuid();
             Guid dependJobGuid = Guid.NewGuid();
             Guid designUIJobGuid = Guid.NewGuid();
             Guid requirenmentAnalysisJobGuid = Guid.NewGuid();
             Guid dependencyGuid = Guid.NewGuid();
             Guid developerConstGuid = Guid.NewGuid();
             Guid serverConstGuid = Guid.NewGuid();
+            Guid frontendBoarGuid = Guid.NewGuid();
 
             builder.Entity<Project>().HasData(
                 new Project
@@ -135,22 +168,26 @@ namespace ProjectManagement.WebApp.Data
                new ProjectUserAssociation { ProjectId = stockTrackingProjectGuid, UserId = userIds["user"] }
             );
 
+            builder.Entity<Board>().HasData(
+                new Board { Id = frontendBoarGuid, ProjectId = stockTrackingProjectGuid, Title = "Front-end board"}
+            );
+
             builder.Entity<Stage>().HasData(
                 new Stage
                 {
-                    Id = designStageGuid,
-                    StageName = "Design",
+                    Id = homePageStageGuid,
+                    StageName = "Home Page",
                     Description = "Design stage for the blog site project",
                     CreatedOn = DateTime.Now,
-                    ProjectId = blogSiteProjectGuid,
+                    BoardId = frontendBoarGuid
                 },
                 new Stage
                 {
-                    Id = planStageGuid,
-                    StageName = "Planning",
+                    Id = supplierPageGuid,
+                    StageName = "Supplier Page",
                     Description = "Planning stage for the stock tracking project",
                     CreatedOn = DateTime.Now,
-                    ProjectId = stockTrackingProjectGuid,
+                    BoardId = frontendBoarGuid
                 }
             );
 
@@ -166,8 +203,7 @@ namespace ProjectManagement.WebApp.Data
                     Priority = 1,
                     Status = "ToDo",
                     CreatedOn = DateTime.Now,
-                    StageId = planStageGuid,
-                    ProjectId = blogSiteProjectGuid,
+                    StageId = supplierPageGuid,
                 },
                 new Job
                 {
@@ -180,8 +216,7 @@ namespace ProjectManagement.WebApp.Data
                     Priority = 2,
                     Status = "InProgress",
                     CreatedOn = DateTime.Now,
-                    ProjectId = stockTrackingProjectGuid,
-                    StageId = designStageGuid,
+                    StageId = homePageStageGuid,
                 },
                 new Job
                 {
@@ -194,8 +229,7 @@ namespace ProjectManagement.WebApp.Data
                     Priority = 2,
                     Status = "Pending",
                     CreatedOn = DateTime.Now,
-                    ProjectId = stockTrackingProjectGuid,
-                    StageId = designStageGuid,
+                    StageId = homePageStageGuid,
                 }
             );
 

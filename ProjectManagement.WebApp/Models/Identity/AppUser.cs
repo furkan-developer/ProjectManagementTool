@@ -16,5 +16,8 @@ namespace ProjectManagement.WebApp.Models.Identity
         public DateTime CreatedOn { get; set; }
 
         public ICollection<ProjectUserAssociation> Projects { get; set; } = new List<ProjectUserAssociation>();
+        public ICollection<JobUserAssociation> Jobs { get; set; } = new List<JobUserAssociation>();
+
+        public ICollection<BoardUserAssociation> Boards { get; set; } = new List<BoardUserAssociation>();
     }
 }
