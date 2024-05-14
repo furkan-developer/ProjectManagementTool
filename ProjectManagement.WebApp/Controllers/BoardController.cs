@@ -1,25 +1,24 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProjectManagement.WebApp.Data;
 using ProjectManagement.WebApp.Models;
+using ProjectManagement.WebApp.Models.ViewModels;
 
 namespace ProjectManagement.WebApp.Controllers;
 
-public class BoardController : Controller
+public class BoardController(AppDbContext appDbContext) : Controller
 {
-    private readonly ILogger<BoardController> _logger;
-
-    public BoardController(ILogger<BoardController> logger)
-    {
-        _logger = logger;
-    }
-
     // [Authorize]
     public IActionResult Index([FromQuery] Guid workspaceId)
     {
         // gets all boards by specified id of workspace
-        ViewData["value"] = workspaceId;
-        return View();
+        var listBoardsVMs = appDbContext.Boards
+            .Where(b => b.ProjectId == workspaceId)
+            .Select(b => new ListBoardsViewModel { Id = b.Id, Title = b.Title })
+            .ToList();
+
+        return View(listBoardsVMs);
     }
 
     // [Authorize]
@@ -32,11 +31,5 @@ public class BoardController : Controller
     public IActionResult Privacy()
     {
         return View();
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

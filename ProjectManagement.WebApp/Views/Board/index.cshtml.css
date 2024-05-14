@@ -1,0 +1,39 @@
+.board {
+  position: relative;
+  flex-shrink: 0;
+  width: 60%;
+  padding-block: 5rem;
+  border-bottom: 2.5px solid white;
+  border-radius: 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  & h2 {
+    color: white;
+  }
+
+  & .btn {
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin-right: 3rem;
+    margin-bottom: 2rem;
+
+    height: 3rem;
+    width: 3rem;
+    transition: all 0.3s ease-out;
+    &:hover {
+      height: 4.3rem;
+      width: 4.3rem;
+    }
+
+    & svg {
+      color: white;
+      transform: rotate(45deg);
+      height: 100%;
+      width: 100%;
+    }
+  }
+}
