@@ -1,4 +1,59 @@
 .main-content {
   overflow-x: visible;
+  background-color: #f0f0f0;
   zoom: normal;
+  padding: 2rem;
+  display: flex;
+}
+
+.workspace-grid--main-content {
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.workspace-warning--main-content {
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+.workspace-warning {
+  border: 2px solid #ffe69c;
+  border-radius: 0.5rem;
+  padding: 2rem 5rem;
+  background-color: #fff3cd;
+
+  & .text {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    & svg {
+      height: 2.5rem;
+      width: 2.5rem;
+    }
+
+    & p {
+      margin-left: 0.5rem;
+      font-size: 1.8rem;
+    }
+  }
+
+  & .footer{
+    display: flex;
+    justify-content: end;
+
+    & a{
+      text-decoration: none;
+      color: black;
+      border: 1px solid black;
+      border-radius: 1.5rem;
+      padding: 0.4rem 0.7rem;
+
+      &:hover {
+        background-color: white;
+        color: black;
+      }
+    }
+  }
 }

@@ -15,9 +15,10 @@ public class BoardController : Controller
     }
 
     // [Authorize]
-    public IActionResult Index()
+    public IActionResult Index([FromQuery] Guid workspaceId)
     {
         // gets all boards by specified id of workspace
+        ViewData["value"] = workspaceId;
         return View();
     }
 

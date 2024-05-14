@@ -1,0 +1,33 @@
+.workspace__wrapper {
+  flex: 48%;
+}
+
+.workspace {
+  display: flex;
+  flex-direction: column;
+  /* align-content: center; */
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  color: white;
+  border-radius: 1rem;
+
+  & p {
+    margin-block: 0.5rem 2rem;
+    letter-spacing: 2px;
+  }
+
+  & .btn {
+    border: 2px solid white;
+    padding: 0.4rem 0.7rem;
+    align-self: center;
+    color: white;
+    text-decoration: none;
+    border-radius: 1.5rem;
+
+    &:hover {
+      background-color: white;
+      color: black;
+    }
+  }
+}

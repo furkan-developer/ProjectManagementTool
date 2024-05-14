@@ -1,3 +1,5 @@
+@model List<Project>
+
 @{
     ViewData["Title"] = "Workspace Index";
 }
@@ -6,13 +8,59 @@
     <link rel="stylesheet" href="~/css/workspace.css">
 }
 
-@if (true)
+@if (Model.Count == 0)
+@* @if (true) *@
 {
-    // check workspace number for current user, if any workspace don't assign to the user this page will render here
+    // check workspace number for current user, if any workspace don't assigns to the user this page will render here
+     @section Scripts{
+     <script src="~/js/workspace-warning.js"></script>
+    }
 
-    <p>There is no assigned workspace for you</p>
+    @* TODO: Create View Component for workspace warning  *@
+    if (User.IsInRole("project-manager"))
+    {
+        <div class="workspace-warning">
+            <div class="text">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M449.07 399.08 278.64 82.58c-12.08-22.44-44.26-22.44-56.35 0L51.87 399.08A32 32 0 0 0 80 446.25h340.89a32 32 0 0 0 28.18-47.17zm-198.6-1.83a20 20 0 1 1 20-20 20 20 0 0 1-20 20zm21.72-201.15-5.74 122a16 16 0 0 1-32 0l-5.74-121.95a21.73 21.73 0 0 1 21.5-22.69h.21a21.74 21.74 0 0 1 21.73 22.7z"></path></svg>
+                <p>Any workspace has not created.</p>
+            </div>
+            <div class="footer"><a href="#">Create Workspace</a></div>
+        </div>
+    }
+    else if (User.IsInRole("project-user"))
+    {
+        <div class="workspace-warning">
+            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M449.07 399.08 278.64 82.58c-12.08-22.44-44.26-22.44-56.35 0L51.87 399.08A32 32 0 0 0 80 446.25h340.89a32 32 0 0 0 28.18-47.17zm-198.6-1.83a20 20 0 1 1 20-20 20 20 0 0 1-20 20zm21.72-201.15-5.74 122a16 16 0 0 1-32 0l-5.74-121.95a21.73 21.73 0 0 1 21.5-22.69h.21a21.74 21.74 0 0 1 21.73 22.7z"></path></svg>
+            <p>There is no assigned workspace for you.</p>
+        </div>
+    }
+    else
+    {
+        <div class="workspace-warning">
+            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M449.07 399.08 278.64 82.58c-12.08-22.44-44.26-22.44-56.35 0L51.87 399.08A32 32 0 0 0 80 446.25h340.89a32 32 0 0 0 28.18-47.17zm-198.6-1.83a20 20 0 1 1 20-20 20 20 0 0 1-20 20zm21.72-201.15-5.74 122a16 16 0 0 1-32 0l-5.74-121.95a21.73 21.73 0 0 1 21.5-22.69h.21a21.74 21.74 0 0 1 21.73 22.7z"></path></svg>
+            <p>You don't have any authority yet.</p>
+        </div>
+    }
 }
 else
 {
+    @section Scripts{
+     <script src="~/js/workspace.js"></script>
+    }
+
     // will render assigned workspace or one more for the user
+    foreach (var item in Model)
+    {
+        <div class="workspace__wrapper">
+            <div class="workspace">
+            <h2>@item.ProjectName</h2>
+            <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae
+                assumenda suscipit tempora laborum laudantium sit?
+                @item.Description
+            </p>
+            <a href="/board/Index?workspaceId=@item.Id.ToString()" class="btn">Go workspace</a>
+            </div>
+        </div>
+    }
 }
