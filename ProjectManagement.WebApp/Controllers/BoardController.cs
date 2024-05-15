@@ -6,6 +6,7 @@ using Microsoft.Identity.Client;
 using ProjectManagement.WebApp.Data;
 using ProjectManagement.WebApp.Models;
 using ProjectManagement.WebApp.Models.DTOs;
+using ProjectManagement.WebApp.Models.Entities;
 using ProjectManagement.WebApp.Models.ViewModels;
 
 namespace ProjectManagement.WebApp.Controllers;
@@ -43,7 +44,7 @@ public class BoardController(AppDbContext appDbContext) : Controller
             })
             .ToList();
 
-        return View(new GetDetailsOneBoardViewModel() { stageDtos = StageDtos });
+        return View(new GetDetailsOneBoardViewModel() { stageDtos = StageDtos, BoardId = boardId });
     }
 
     [HttpPost]
@@ -65,10 +66,46 @@ public class BoardController(AppDbContext appDbContext) : Controller
 
         var job = appDbContext.Jobs.AsTracking().SingleOrDefault(j => j.Id == dto.TaskId);
         job.StageId = dto.ToStage;
-        
+
         appDbContext.SaveChanges();
 
         return Json(new { isSuccess = true });
+    }
+
+
+    [HttpGet]
+    public IActionResult CreateOneTask(Guid stageId, Guid boardId)
+    {
+        TempData["BoardId"] = boardId;
+        ViewData["StageId"] = stageId;
+
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult CreateOneTask([FromForm] CreateOneTaskViewModel createOneTaskViewModel)
+    {
+        // TODO: Your code here
+
+        if (ModelState.IsValid)
+        {
+            appDbContext.Jobs.Add(new Job
+            {
+                Title = createOneTaskViewModel.Title,
+                Description = createOneTaskViewModel.Description,
+                DueDate = createOneTaskViewModel.DueDate,
+                Priority = createOneTaskViewModel.Priority,
+                StageId = createOneTaskViewModel.StageId,
+                AssignedTo = "random-user",
+                Status = "active"
+            });
+            appDbContext.SaveChanges();
+
+            return RedirectToAction("GetDetailsOneBoard", new { boardId = TempData["BoardId"] });
+        }
+
+        return View(createOneTaskViewModel);
     }
 
 

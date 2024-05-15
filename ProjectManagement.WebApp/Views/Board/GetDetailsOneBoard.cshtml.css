@@ -161,6 +161,7 @@
   }
   
   .add-task-button {
+    text-decoration: none;
     color: #606b78;
     display: flex;
     padding: 1rem;

@@ -1,13 +1,17 @@
-﻿namespace ProjectManagement.WebApp.Models.Entities
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+
+namespace ProjectManagement.WebApp.Models.Entities
 {
     public class Job : EntityBase
     {
         public string Title { get; set; }
         public string Description { get; set; }
         public string AssignedTo { get; set; }
-        public DateTime StartDate { get; set; }
+        public DateTime StartDate { get; set; } = DateTime.Now;
         public DateTime DueDate { get; set; }
         public JobPriority Priority { get; set; }
+
+        // TODO: remove property
         public string Status { get; set; }
 
 

@@ -8,6 +8,7 @@ namespace ProjectManagement.WebApp.Models.ViewModels
 {
     public class GetDetailsOneBoardViewModel
     {
+        public Guid BoardId { get; set; }
         public List<StageDto> stageDtos { get; set; }
     }
 }
