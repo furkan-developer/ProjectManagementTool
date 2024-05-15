@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using ProjectManagement.WebApp.Data;
 using ProjectManagement.WebApp.Models;
 using ProjectManagement.WebApp.Models.DTOs;
@@ -30,8 +31,11 @@ public class BoardController(AppDbContext appDbContext) : Controller
             .Where(s => s.BoardId == boardId)
             .Select(s => new StageDto()
             {
+                StageId = s.Id,
                 StageName = s.StageName,
-                jobDTOs = s.Jobs.Select(j => new JobDTO(){
+                JobDTOs = s.Jobs.Select(j => new JobDTO()
+                {
+                    JobId = j.Id,
                     DueDate = j.DueDate,
                     Title = j.Title,
                     Priority = j.Priority,
@@ -39,8 +43,34 @@ public class BoardController(AppDbContext appDbContext) : Controller
             })
             .ToList();
 
-        return View(new GetDetailsOneBoardViewModel(){stageDtos = StageDtos });
+        return View(new GetDetailsOneBoardViewModel() { stageDtos = StageDtos });
     }
+
+    [HttpPost]
+    public JsonResult UpdateStageOfOneTask([FromBody] UpdateStageOfOneTaskDto dto)
+    {
+        appDbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+
+        var fromStage = appDbContext.Stages.SingleOrDefault(s => s.Id == dto.FromStage);
+        var toStage = appDbContext.Stages.SingleOrDefault(s => s.Id == dto.ToStage);
+        if (fromStage is null || toStage is null)
+            return Json(new { isSuccess = false, errorMessage = "Stage is not available" });
+
+        var hasJobAtStage = appDbContext.Stages
+           .Include(s => s.Jobs)
+           .Any(s => s.Id == dto.FromStage && s.Jobs.Where(j => j.Id == dto.TaskId).Any());
+
+        if (!hasJobAtStage)
+            return Json(new { isSuccess = false, errorMessage = "Task is not available" });
+
+        var job = appDbContext.Jobs.AsTracking().SingleOrDefault(j => j.Id == dto.TaskId);
+        job.StageId = dto.ToStage;
+        
+        appDbContext.SaveChanges();
+
+        return Json(new { isSuccess = true });
+    }
+
 
     public IActionResult Privacy()
     {

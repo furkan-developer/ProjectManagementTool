@@ -7,7 +7,8 @@ namespace ProjectManagement.WebApp.Models.DTOs
 {
     public class StageDto
     {
-          public string StageName { get; set; }
-          public List<JobDTO> jobDTOs { get; set; }
+        public Guid StageId { get; set; }
+        public string StageName { get; set; }
+        public List<JobDTO> JobDTOs { get; set; }
     }
 }

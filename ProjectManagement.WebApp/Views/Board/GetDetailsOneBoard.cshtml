@@ -6,13 +6,13 @@
 }
 
 @section Scripts {
-   <script src="~/js/index.js" asp-append-version="true"></script>
+   <script src="~/js/get-details-one-board.js"></script>
 }
 
   <div class="stages">
       @foreach (var item in Model.stageDtos)
     {
-        <div class="stage">
+        <div class="stage" data-stage-id="@item.StageId">
             <div class="stage-header">
                 <p>@item.StageName</p>
                 <svg stroke="currentColor"
@@ -26,9 +26,9 @@
                 </svg>
             </div>
             <div id="stage-body" class="stage-body">
-                @foreach (var task in item.jobDTOs)
+                @foreach (var task in item.JobDTOs)
                 {
-                    <div class="task__wrapper">
+                    <div class="task__wrapper" data-task-id="@task.JobId">
                         @if(task.Priority == JobPriority.low)
                         {
                             <div class="task-priority-low"></div>

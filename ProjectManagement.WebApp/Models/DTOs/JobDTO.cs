@@ -7,6 +7,7 @@ namespace ProjectManagement.WebApp.Models.DTOs
 {
     public class JobDTO
     {
+        public Guid JobId { get; set; }
         public string Title { get; set; }
         public DateTime DueDate { get; set; }
         public JobPriority Priority { get; set; }
