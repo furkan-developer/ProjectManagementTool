@@ -72,6 +72,19 @@ public class BoardController(AppDbContext appDbContext) : Controller
         return Json(new { isSuccess = true });
     }
 
+    [HttpPost]
+    public JsonResult DeleteOneTask([FromBody] DeleteOneTaskDTO dto)
+    {
+        var job = appDbContext.Jobs.SingleOrDefault(j => j.Id == dto.JobId);
+        if (job is null)
+            return Json(new { isSuccess = false, errorMessage = "Task is not available" });
+
+        appDbContext.Jobs.Remove(job);
+        appDbContext.SaveChanges();
+
+        return Json(new { isSuccess = true });
+    }
+
 
     [HttpGet]
     public IActionResult CreateOneTask(Guid stageId, Guid boardId)
@@ -83,7 +96,7 @@ public class BoardController(AppDbContext appDbContext) : Controller
     }
 
     [HttpPost]
-    [ValidateAntiForgeryToken]
+    // [ValidateAntiForgeryToken]
     public IActionResult CreateOneTask([FromForm] CreateOneTaskViewModel createOneTaskViewModel)
     {
         // TODO: Your code here
