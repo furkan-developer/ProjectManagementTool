@@ -87,16 +87,19 @@ public class BoardController(AppDbContext appDbContext) : Controller
 
 
     [HttpGet]
-    public IActionResult CreateOneTask(Guid stageId, Guid boardId)
+    public IActionResult CreateOneTask(Guid stageId, string? returnUrl)
     {
-        TempData["BoardId"] = boardId;
         ViewData["StageId"] = stageId;
+        if (returnUrl is not null){
+            TempData["ReturnUrl"] = returnUrl;
+            ViewData["ReturnUrl"] = returnUrl;
+        }
 
         return View();
     }
 
     [HttpPost]
-    // [ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
     public IActionResult CreateOneTask([FromForm] CreateOneTaskViewModel createOneTaskViewModel)
     {
         // TODO: Your code here
@@ -115,12 +118,20 @@ public class BoardController(AppDbContext appDbContext) : Controller
             });
             appDbContext.SaveChanges();
 
-            return RedirectToAction("GetDetailsOneBoard", new { boardId = TempData["BoardId"] });
+            var returnUrl = TempData["ReturnUrl"];
+            if (returnUrl != null)
+            {
+                TempData.Remove("ReturnUrl"); // TempData'yi temizle
+                return Redirect(returnUrl.ToString() ?? "/");
+            }
+            return RedirectToAction("Index", "Workspace");
         }
+
+        // TempData'yi burada da kaldırabilirsiniz
+        TempData.Remove("ReturnUrl");
 
         return View(createOneTaskViewModel);
     }
-
 
     public IActionResult Privacy()
     {

@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "CreateOneTask";
     Layout = "~/Views/Shared/_BootstrapLayout.cshtml";
-    Context.Request.QueryString.Add("name", "furkan");
 }
 
 <h1>Create Task</h1>
@@ -60,7 +59,7 @@
             </div>
             <div class="form-group mb-2">
                 <input type="submit" value="Create" class="btn btn-primary" />
-                <a href="/Board/GetDetailsOneBoard?boardId=@TempData["BoardId"]" class="btn btn-warning">Back to List</a>
+                <a href="@ViewData["ReturnUrl"].ToString()" class="btn btn-warning">Back to List</a>
             </div>
         </form>
     </div>
@@ -70,4 +69,11 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        let btn = document.getElementById("back-to-button");
+        btn.addEventListener("click", function (ev) {
+            window.history.back();
+            locaiton.reload();
+        });
+    </script>
 }
