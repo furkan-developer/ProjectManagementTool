@@ -5,12 +5,16 @@
     Layout = "~/Views/Shared/_BootstrapLayout.cshtml";
 }
 
+@section StyleSheets{
+    <link rel="stylesheet" href="~/css/create-one-task.css" asp-append-version="true" />
+}
+
 <h1>Create Task</h1>
 
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="CreateOneTask">
+<form asp-action="CreateOneTask">
+    <div class="row mb-2">
+        <div class="col-md-5">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="StageId" value="@ViewData["stageId"]">
             <div class="form-group mb-2">
@@ -18,62 +22,82 @@
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-              <div class="form-group mb-2">
+            <div class="form-group mb-2">
                 <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control"></textarea>
+                <textarea asp-for="Description" class="form-control" style="height:100px"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             @* <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
+            <label asp-for="StartDate" class="control-label"></label>
+            <input asp-for="StartDate" class="form-control" />
+            <span asp-validation-for="StartDate" class="text-danger"></span>
+            <div class="form-text">Optional</div>
             </div> *@
-            <div class="form-group mb-2">
+            <div class="form-group mb-3">
                 <label asp-for="DueDate" class="control-label"></label>
                 <input asp-for="DueDate" class="form-control" />
                 <span asp-validation-for="DueDate" class="text-danger"></span>
             </div>
-            <div class="form-group mb-2">
-                <label class="control-label mb-1">Priority</label>
-
-                <div class="d-flex">
+            <fieldset class="row mb-3">
+                <legend class="col-form-label col-sm-2 pt-0">Priority</legend>
+                <div class="col-sm-10">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" asp-for="Priority" value="@JobPriority.low" checked>
+                        <input class="form-check-input" type="radio" value="@JobPriority.low" checked
+                            asp-for="Priority">
                         <label class="form-check-label" asp-for="Priority">
                             Low
                         </label>
                     </div>
-                    <div class="form-check ms-2">
+                    <div class="form-check">
                         <input class="form-check-input" type="radio" asp-for="Priority" value="@JobPriority.medium">
                         <label class="form-check-label" asp-for="Priority">
                             Medium
                         </label>
                     </div>
-                    <div class="form-check ms-2">
+                    <div class="form-check disabled">
                         <input class="form-check-input" type="radio" asp-for="Priority" value="@JobPriority.high">
                         <label class="form-check-label" asp-for="Priority">
-                            Heigh
+                            High
                         </label>
                     </div>
                 </div>
+            </fieldset>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            <label>AssignTo</label>
+            <div class="mb-1">
+                <input id="user-search" type="text" class="form-control" placeholder="Search user...">
             </div>
+            <div class="user-list__wrapper border">
+                <ul id="user-list" class="list-group list-group-flush border-bottom">
+                    @for (int i = 0; i < Model.Assignments.Count; i++)
+                    {
+                        <li>
+                            <input type="checkbox" asp-for="@Model.Assignments[i].IsChecked" class="form-check-input form-control-md" />
+                            <label class="form-check-label">@Model.Assignments[i].FullName</label>
+                            <input type="hidden" asp-for="@Model.Assignments[i].Id" />
+                            <input type="hidden" asp-for="@Model.Assignments[i].FullName" />
+                        </li>
+                    }
+                    <li id="not-found-li-item" class="d-none">Not found user</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             <div class="form-group mb-2">
                 <input type="submit" value="Create" class="btn btn-primary" />
                 <a href="@ViewData["ReturnUrl"].ToString()" class="btn btn-warning">Back to List</a>
             </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script>
-        let btn = document.getElementById("back-to-button");
-        btn.addEventListener("click", function (ev) {
-            window.history.back();
-            locaiton.reload();
-        });
-    </script>
+    <script src="~/js/create-one-task.js"></script>
 }

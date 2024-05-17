@@ -8,12 +8,15 @@ namespace ProjectManagement.WebApp.Models.ViewModels
 {
     public class CreateOneTaskViewModel
     {
+        public CreateOneTaskViewModel()
+        {
+            Assignments = new List<UserAssignmentViewModel>();
+        }
+
         [MinLength(length: 3, ErrorMessage = "Title must be min 3 lenght")]
         public string Title { get; set; }
 
         public string Description { get; set; }
-
-        // public string AssignedTo { get; set; }
 
         // [DataType(DataType.Date)]
         // [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
@@ -25,5 +28,7 @@ namespace ProjectManagement.WebApp.Models.ViewModels
         public JobPriority Priority { get; set; }
 
         public Guid StageId { get; set; }
+
+        public List<UserAssignmentViewModel> Assignments { get; set; }
     }
 }

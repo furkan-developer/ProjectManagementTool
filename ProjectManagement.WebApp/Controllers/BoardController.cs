@@ -87,23 +87,33 @@ public class BoardController(AppDbContext appDbContext) : Controller
 
 
     [HttpGet]
-    public IActionResult CreateOneTask(Guid stageId, string? returnUrl)
+    public IActionResult CreateOneTask(Guid boardId, Guid stageId, string? returnUrl)
     {
         ViewData["StageId"] = stageId;
-        if (returnUrl is not null){
+        if (returnUrl is not null)
+        {
             TempData["ReturnUrl"] = returnUrl;
             ViewData["ReturnUrl"] = returnUrl;
         }
 
-        return View();
+        List<UserAssignmentViewModel> users = appDbContext.BoardUserAssociations
+          .Where(a => a.BoardId == boardId)
+          .Include(a => a.AppUser)
+          .Select(a => new UserAssignmentViewModel()
+          {
+              Id = a.AppUser.Id,
+              FullName = $"{a.AppUser.FirstName} {a.AppUser.LastName}"
+          }).ToList();
+
+        var viewModel = new CreateOneTaskViewModel() { Assignments = users };
+
+        return View(viewModel);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult CreateOneTask([FromForm] CreateOneTaskViewModel createOneTaskViewModel)
     {
-        // TODO: Your code here
-
         if (ModelState.IsValid)
         {
             appDbContext.Jobs.Add(new Job
@@ -113,22 +123,22 @@ public class BoardController(AppDbContext appDbContext) : Controller
                 DueDate = createOneTaskViewModel.DueDate,
                 Priority = createOneTaskViewModel.Priority,
                 StageId = createOneTaskViewModel.StageId,
-                AssignedTo = "random-user",
-                Status = "active"
+                Users = createOneTaskViewModel.Assignments
+                    .Select(a =>
+                        new JobUserAssociation() { UserId = a.Id }
+                    ).ToList()
             });
+
             appDbContext.SaveChanges();
 
             var returnUrl = TempData["ReturnUrl"];
             if (returnUrl != null)
             {
-                TempData.Remove("ReturnUrl"); // TempData'yi temizle
+                TempData.Remove("ReturnUrl");
                 return Redirect(returnUrl.ToString() ?? "/");
             }
             return RedirectToAction("Index", "Workspace");
         }
-
-        // TempData'yi burada da kaldırabilirsiniz
-        TempData.Remove("ReturnUrl");
 
         return View(createOneTaskViewModel);
     }
