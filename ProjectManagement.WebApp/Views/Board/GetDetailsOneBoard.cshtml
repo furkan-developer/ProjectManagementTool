@@ -92,10 +92,21 @@
                                        
                                         <div class="assignment">
                                             <ul>
-                                                <li>A</li>
-                                                @* <!-- <li>B</li>
-                                                <li>C</li> -->
-                                                <!-- <li class="assignment-number">+5</li> --> *@
+                                                @if(task.Assignments.Count <= 3)
+                                                {
+                                                    foreach (var name in task.Assignments)
+                                                    {
+                                                        <li>@name[0]<a href="#">@name</a></li>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    for (int i = 0; i <= 3; i++)
+                                                    {
+                                                        <li>@task.Assignments[i][0]</li>
+                                                    }
+                                                    <li class="assignment-number">+@(task.Assignments.Count - 3)</li>
+                                                }
                                             </ul>
                                         </div>
                                     </div>

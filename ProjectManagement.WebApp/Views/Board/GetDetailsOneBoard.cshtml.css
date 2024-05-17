@@ -139,6 +139,29 @@
       border-radius: 50%;
       padding: 0.5rem 1rem;
       color: white;
+    
+      position: relative;
+
+      &:hover > a {
+        display: inline-block !important;
+      }
+
+      & a {
+        text-decoration: none;
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 10%;
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        color: black;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 0.5rem;
+        z-index: 1;
+        min-width: 120px;
+        padding: 0.5rem;
+        cursor: pointer;
+      }
 
       &:first-child {
         background-color: #d183b9;

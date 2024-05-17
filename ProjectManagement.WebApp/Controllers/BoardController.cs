@@ -40,6 +40,7 @@ public class BoardController(AppDbContext appDbContext) : Controller
                     DueDate = j.DueDate,
                     Title = j.Title,
                     Priority = j.Priority,
+                    Assignments = j.Users.Select( a => $"{a.User.FirstName} {a.User.LastName}").ToList()
                 }).ToList()
             })
             .ToList();
@@ -116,6 +117,8 @@ public class BoardController(AppDbContext appDbContext) : Controller
     {
         if (ModelState.IsValid)
         {
+            createOneTaskViewModel.Assignments = createOneTaskViewModel.Assignments.Where(a => a.IsChecked).ToList();
+
             appDbContext.Jobs.Add(new Job
             {
                 Title = createOneTaskViewModel.Title,
