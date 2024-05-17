@@ -6,15 +6,10 @@ namespace ProjectManagement.WebApp.Models.Entities
     {
         public string Title { get; set; }
         public string Description { get; set; }
-        public string AssignedTo { get; set; }
         public DateTime StartDate { get; set; } = DateTime.Now;
         public DateTime DueDate { get; set; }
         public JobPriority Priority { get; set; }
-
-        // TODO: remove property
-        public string Status { get; set; }
-
-
+        
         public Stage? Stage { get; set; }
         public Guid? StageId { get; set; }
         

@@ -10,8 +10,6 @@ namespace ProjectManagement.WebApp.Models.Entities
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public string Status { get; set; }
-
 
         public ICollection<Board> boards { get; set; } = new List<Board>();
         public ICollection<ProjectUserAssociation> Users { get; set; } = new List<ProjectUserAssociation>();

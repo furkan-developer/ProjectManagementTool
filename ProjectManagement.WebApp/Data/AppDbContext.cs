@@ -137,6 +137,7 @@ namespace ProjectManagement.WebApp.Data
             Guid developerConstGuid = Guid.NewGuid();
             Guid serverConstGuid = Guid.NewGuid();
             Guid frontendBoarGuid = Guid.NewGuid();
+            Guid backendBoarGuid = Guid.NewGuid();
 
             builder.Entity<Project>().HasData(
                 new Project
@@ -146,7 +147,6 @@ namespace ProjectManagement.WebApp.Data
                     Description = "A project to create a blog site",
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now.AddDays(30),
-                    Status = "InProgress",
                     CreatedOn = DateTime.Now
                 },
                 new Project
@@ -156,20 +156,28 @@ namespace ProjectManagement.WebApp.Data
                     Description = "A project to develop a stock tracking system",
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now.AddDays(60),
-                    Status = "Planning",
                     CreatedOn = DateTime.Now,
                 }
             );
 
             builder.Entity<ProjectUserAssociation>().HasData(
                new ProjectUserAssociation { ProjectId = blogSiteProjectGuid, UserId = userIds["project-manager"] },
-               new ProjectUserAssociation { ProjectId = blogSiteProjectGuid, UserId = userIds["project-user"] },
+               new ProjectUserAssociation { ProjectId = stockTrackingProjectGuid, UserId = userIds["project-user"] },
                new ProjectUserAssociation { ProjectId = stockTrackingProjectGuid, UserId = userIds["project-manager"] },
-               new ProjectUserAssociation { ProjectId = stockTrackingProjectGuid, UserId = userIds["user"] }
+               new ProjectUserAssociation { ProjectId = stockTrackingProjectGuid, UserId = userIds["user"] },
+               new ProjectUserAssociation { ProjectId = stockTrackingProjectGuid, UserId = userIds["project-user-2"] },
+               new ProjectUserAssociation { ProjectId = stockTrackingProjectGuid, UserId = userIds["project-user-3"] }
+            );
+
+            builder.Entity<BoardUserAssociation>().HasData(
+                new BoardUserAssociation { AppUserId = userIds["project-user"], BoardId = frontendBoarGuid },
+                new BoardUserAssociation { AppUserId = userIds["project-user-2"], BoardId = frontendBoarGuid },
+                new BoardUserAssociation { AppUserId = userIds["project-user-3"], BoardId = frontendBoarGuid }
             );
 
             builder.Entity<Board>().HasData(
-                new Board { Id = frontendBoarGuid, ProjectId = stockTrackingProjectGuid, Title = "Front-end board"}
+                new Board { Id = frontendBoarGuid, ProjectId = stockTrackingProjectGuid, Title = "Front-end board" },
+                new Board { Id = backendBoarGuid, ProjectId = stockTrackingProjectGuid, Title = "Back-end board" }
             );
 
             builder.Entity<Stage>().HasData(
@@ -197,11 +205,9 @@ namespace ProjectManagement.WebApp.Data
                     Id = designUIJobGuid,
                     Title = "Design UI",
                     Description = "Design user interface for the blog site",
-                    AssignedTo = "John Doe",
                     StartDate = DateTime.Now,
                     DueDate = DateTime.Now.AddDays(7),
                     Priority = Models.JobPriority.low,
-                    Status = "ToDo",
                     CreatedOn = DateTime.Now,
                     StageId = supplierPageGuid,
                 },
@@ -210,11 +216,9 @@ namespace ProjectManagement.WebApp.Data
                     Id = requirenmentAnalysisJobGuid,
                     Title = "Requirement Analysis",
                     Description = "Analyze requirements for the stock tracking project",
-                    AssignedTo = "John Doe",
                     StartDate = DateTime.Now,
                     DueDate = DateTime.Now.AddDays(14),
                     Priority = Models.JobPriority.medium,
-                    Status = "InProgress",
                     CreatedOn = DateTime.Now,
                     StageId = homePageStageGuid,
                 },
@@ -223,11 +227,9 @@ namespace ProjectManagement.WebApp.Data
                     Id = dependJobGuid,
                     Title = "Depend job",
                     Description = "Depend job",
-                    AssignedTo = "John Doe",
                     StartDate = DateTime.Now,
                     DueDate = DateTime.Now.AddDays(14),
                     Priority = Models.JobPriority.high,
-                    Status = "Pending",
                     CreatedOn = DateTime.Now,
                     StageId = homePageStageGuid,
                 }
@@ -274,7 +276,9 @@ namespace ProjectManagement.WebApp.Data
                 {"admin", Guid.NewGuid()},
                 {"project-manager", Guid.NewGuid()},
                 {"user", Guid.NewGuid()},
-                {"project-user", Guid.NewGuid()}
+                {"project-user", Guid.NewGuid()},
+                {"project-user-2",Guid.NewGuid()},
+                {"project-user-3",Guid.NewGuid()},
             };
 
             AppUser admin = new AppUser()
@@ -341,11 +345,45 @@ namespace ProjectManagement.WebApp.Data
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
 
+            AppUser projectUser2 = new AppUser()
+            {
+                Id = userIds["project-user-2"],
+                FirstName = "Furkan",
+                LastName = "Aydin",
+                BirthDay = DateTime.Now,
+                Gender = Models.Gender.Male,
+                CreatedOn = DateTime.Now,
+                UserName = "furkanaydin123",
+                NormalizedUserName = "FURKANAYDIN123",
+                Email = "furkanaydin@gmail.com",
+                NormalizedEmail = "FURKANAYDIN@GMAIL.COM",
+                EmailConfirmed = false,
+                SecurityStamp = Guid.NewGuid().ToString("D")
+            };
+
+             AppUser projectUser3 = new AppUser()
+            {
+                Id = userIds["project-user-3"],
+                FirstName = "Firat Can",
+                LastName = "Yanan",
+                BirthDay = DateTime.Now,
+                Gender = Models.Gender.Male,
+                CreatedOn = DateTime.Now,
+                UserName = "firatcanyanan123",
+                NormalizedUserName = "FIRATCANYANAN123",
+                Email = "firatcanyanan@gmail.com",
+                NormalizedEmail = "FIRATCANYANAN@GMAIL.COM",
+                EmailConfirmed = false,
+                SecurityStamp = Guid.NewGuid().ToString("D")
+            };
+
             CreatePasswordFor(builder,
                 new UserSeedDataModel<AppUser>() { User = admin, Password = "admin123" },
                 new UserSeedDataModel<AppUser>() { User = projectManager, Password = "user123" },
                 new UserSeedDataModel<AppUser>() { User = user, Password = "user123" },
-                new UserSeedDataModel<AppUser>() { User = projectUser, Password = "user123" });
+                new UserSeedDataModel<AppUser>() { User = projectUser, Password = "user123" },
+                new UserSeedDataModel<AppUser>() { User = projectUser2, Password = "user123" },
+                new UserSeedDataModel<AppUser>() { User = projectUser3, Password = "user123" });
         }
 
         private void SeedRoles(ModelBuilder builder, out Dictionary<string, Guid> roleIds)
