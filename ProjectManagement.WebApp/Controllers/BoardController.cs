@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
@@ -7,6 +8,7 @@ using ProjectManagement.WebApp.Data;
 using ProjectManagement.WebApp.Models;
 using ProjectManagement.WebApp.Models.DTOs;
 using ProjectManagement.WebApp.Models.Entities;
+using ProjectManagement.WebApp.Models.Identity;
 using ProjectManagement.WebApp.Models.ViewModels;
 
 namespace ProjectManagement.WebApp.Controllers;
@@ -51,7 +53,7 @@ public class BoardController(AppDbContext appDbContext) : Controller
     }
 
     [HttpPost]
-    public JsonResult UpdateStageOfOneTask([FromBody] UpdateStageOfOneTaskDto dto)
+    public async Task<JsonResult> UpdateStageOfOneTask([FromBody] UpdateStageOfOneTaskDto dto, [FromServices] UserManager<AppUser> userManager)
     {
         appDbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
@@ -67,9 +69,15 @@ public class BoardController(AppDbContext appDbContext) : Controller
         if (!hasJobAtStage)
             return Json(new { isSuccess = false, errorMessage = "Task is not available" });
 
+        if (User.IsInRole("project-user"))
+        {
+            AppUser user = await userManager.GetUserAsync(User);
+            if (!(user != null && appDbContext.JobUserAssociations.Any(a => a.UserId == user.Id && a.JobId == dto.TaskId)))
+                return Json(new { isSuccess = false, errorMessage= "You have not assignment for this task. Nonetheless, you don't perform any action over the task."});
+        }
+
         var job = appDbContext.Jobs.AsTracking().SingleOrDefault(j => j.Id == dto.TaskId);
         job.StageId = dto.ToStage;
-
         appDbContext.SaveChanges();
 
         return Json(new { isSuccess = true });
