@@ -16,6 +16,8 @@ public class BoardController(AppDbContext appDbContext) : Controller
     // [Authorize]
     public IActionResult Index([FromQuery] Guid workspaceId)
     {
+        // TODO: Bind workspaceId parameter to route-data
+        ViewData["WorkspaceId"] = workspaceId;
         // gets all boards by specified id of workspace
         var listBoardsVMs = appDbContext.Boards
             .Where(b => b.ProjectId == workspaceId)

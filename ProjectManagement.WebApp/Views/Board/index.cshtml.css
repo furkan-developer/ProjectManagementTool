@@ -1,8 +1,32 @@
+.btn-position-reference{
+  width: 100%;
+  position: relative;
+  width: 60%;
+}
+
+.create-board-btn{
+  position: absolute;
+  right: -8rem;
+  display: inline-block;
+  height: 6rem;
+  width: 6rem;
+  color: #2E5878;
+  z-index: 1;
+ 
+  & svg{
+    height: 100%;
+    width: 100%;
+  }
+
+  &:hover{
+  }
+}
+
 .board {
   position: relative;
   flex-shrink: 0;
   width: 60%;
-  padding-block: 5rem;
+  padding-block: 3.5rem;
   border-bottom: 2.5px solid white;
   border-radius: 1rem;
 
@@ -16,17 +40,16 @@
   & .btn {
     display: inline-block;
     position: absolute;
-    right: 0;
-    bottom: 0;
-    margin-right: 3rem;
-    margin-bottom: 2rem;
+    right: 3rem;
+    bottom: 1rem;
 
-    height: 3rem;
-    width: 3rem;
+
+    height: 2.5rem;
+    width: 2.5rem;
     transition: all 0.3s ease-out;
     &:hover {
-      height: 4.3rem;
-      width: 4.3rem;
+      height: 3rem;
+      width: 3rem;
     }
 
     & svg {

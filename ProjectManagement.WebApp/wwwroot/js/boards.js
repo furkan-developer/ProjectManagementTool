@@ -10,3 +10,12 @@ for (let index = 0; index < workspaces.length; index++) {
     workspaces[index].style.backgroundColor = `#${workspaceColors[colorOrder]}`;
     ++colorOrder;
 }
+
+// Create task button
+const mainContent = document.getElementById("main-content");
+mainContent.addEventListener("scroll", function (ev) {
+  let scrollTop = this.scrollTop;
+  const createBoardButton = document.getElementById("create-board-button");
+  
+  createBoardButton.style.top = `${scrollTop}px`;
+});
