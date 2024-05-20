@@ -16,6 +16,7 @@ using ProjectManagement.WebApp.Models.ViewModels;
 
 namespace ProjectManagement.WebApp.Controllers
 {
+    [Route("[controller]/[action]")]
     public class WorkspaceController(
         ILogger<WorkspaceController> logger,
         UserManager<AppUser> userManager,
@@ -23,6 +24,7 @@ namespace ProjectManagement.WebApp.Controllers
     {
 
         [Authorize]
+        [Route("/")]
         public async Task<IActionResult> Index()
         {
             AppUser user = await userManager.GetUserAsync(User);

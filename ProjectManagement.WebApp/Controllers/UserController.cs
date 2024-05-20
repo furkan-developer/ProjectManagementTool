@@ -13,6 +13,7 @@ using ProjectManagement.WebApp.Models.ViewModels;
 
 namespace ProjectManagement.WebApp.Controllers
 {
+    [Route("[controller]/[action]")]
     public class UserController : Controller
     {
         private readonly UserManager<AppUser> _userManager;

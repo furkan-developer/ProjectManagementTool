@@ -13,9 +13,10 @@ using ProjectManagement.WebApp.Models.ViewModels;
 
 namespace ProjectManagement.WebApp.Controllers;
 
+[Route("[controller]/[action]")]
 public class BoardController(AppDbContext appDbContext) : Controller
 {
-    // [Authorize]
+    [Authorize]
     public IActionResult Index([FromQuery] Guid workspaceId)
     {
         // TODO: Bind workspaceId parameter to route-data
@@ -29,7 +30,7 @@ public class BoardController(AppDbContext appDbContext) : Controller
         return View(listBoardsVMs);
     }
 
-    // [Authorize]
+    [Authorize]
     public IActionResult GetDetailsOneBoard([FromQuery] Guid boardId)
     {
         List<StageDto> StageDtos = appDbContext.Stages
@@ -73,7 +74,7 @@ public class BoardController(AppDbContext appDbContext) : Controller
         {
             AppUser user = await userManager.GetUserAsync(User);
             if (!(user != null && appDbContext.JobUserAssociations.Any(a => a.UserId == user.Id && a.JobId == dto.TaskId)))
-                return Json(new { isSuccess = false, errorMessage= "You have not assignment for this task. Nonetheless, you don't perform any action over the task."});
+                return Json(new { isSuccess = false, errorMessage = "You have not assignment for this task. Nonetheless, you don't perform any action over the task." });
         }
 
         var job = appDbContext.Jobs.AsTracking().SingleOrDefault(j => j.Id == dto.TaskId);

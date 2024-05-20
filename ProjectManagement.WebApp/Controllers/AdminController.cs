@@ -14,6 +14,7 @@ using ProjectManagement.WebApp.Models.ViewModels;
 namespace ProjectManagement.WebApp.Controllers
 {
     [Authorize(Roles ="admin")]
+    [Route("[controller]/[action]")]
     public class AdminController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
