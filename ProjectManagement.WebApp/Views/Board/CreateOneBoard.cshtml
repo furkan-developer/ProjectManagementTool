@@ -1,0 +1,108 @@
+@model CreateOneBoardViewModel
+
+@{
+    ViewData["Title"] = "CreateOneBorad";
+    Layout = "~/Views/Shared/_BootstrapLayout.cshtml";
+}
+
+@section StyleSheets {
+    @* <link rel="stylesheet" href="~/css/create-one-task.css" asp-append-version="true" /> *@
+}
+
+<h1>Create Board</h1>
+
+<hr />
+
+<form asp-action="CreateOneBoard">
+    <input type="hidden" asp-for="WorkspaceId" value="@ViewData["WorkspaceId"].ToString()">
+    <div class="row">
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-2">
+                <label asp-for="Title" class="form-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="mb-2">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="mb-2 border border-2 p-3" style="border-style:dashed!important;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="h5 mb-2">Add Stages</label>
+                    <div id="add-stage-button" class="btn btn-outline-primary">Add</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-2">
+                            <label class="form-label">Stage Name</label>
+                            <input id="stage-name" class="form-control" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Stage Description</label>
+                            <textarea id="stage-description" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6 table-max-height">
+                        <table class="table">
+                            <thead>
+                                <th>Stage Name</th>
+                                <th>Remove</th>
+                            </thead>
+                            <tbody id="stage-list-table-body">
+                            </tbody>
+                        </table>
+                        <p id="empty-stage-list-text" class="text-center">You have not added yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            <label>AssignTo</label>
+            <div class="mb-1">
+                <input id="user-search" type="text" class="form-control" placeholder="Search user...">
+            </div>
+            <div class="user-list__wrapper border">
+                @if (Model.Assignments.Count > 0)
+                {
+
+                    <ul id="user-list" class="list-group list-group-flush border-bottom">
+                        @for (int i = 0; i < Model.Assignments.Count; i++)
+                        {
+                            <li>
+                                <input type="checkbox" asp-for="@Model.Assignments[i].IsChecked"
+                                    class="form-check-input form-control-md" />
+                                <label class="form-check-label">@Model.Assignments[i].FullName</label>
+                                <input type="hidden" asp-for="@Model.Assignments[i].Id" />
+                                <input type="hidden" asp-for="@Model.Assignments[i].FullName" />
+                            </li>
+                        }
+                        <li id="not-found-li-item" class="d-none">Not found user</li>
+                    </ul>
+                }else{
+                    <p>There is no available user the workspace.</p>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group mb-2">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a href="@ViewData["ReturnUrl"]?.ToString()" class="btn btn-warning text-white">Back to List</a>
+            </div>
+        </div>
+    </div>
+    <div id="stage-datas-field"></div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/create-one-board.js" asp-append-version="true"></script>
+}

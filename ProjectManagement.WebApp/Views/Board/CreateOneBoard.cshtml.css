@@ -1,0 +1,19 @@
+.table-max-height {
+  max-height: 200px;
+  overflow-y: auto;
+}
+#stage-list-table-body {
+  & svg {
+    color: #dc3545;
+  }
+}
+.user-list__wrapper {
+  max-height: 200px;
+  min-height: 30px;
+  overflow-y: auto;
+
+  & ul {
+    padding: 0.5rem;
+    list-style-type: none;
+  }
+}

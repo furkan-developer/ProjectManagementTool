@@ -42,7 +42,7 @@ public class BoardController(AppDbContext appDbContext) : Controller
                     DueDate = j.DueDate,
                     Title = j.Title,
                     Priority = j.Priority,
-                    Assignments = j.Users.Select( a => $"{a.User.FirstName} {a.User.LastName}").ToList()
+                    Assignments = j.Users.Select(a => $"{a.User.FirstName} {a.User.LastName}").ToList()
                 }).ToList()
             })
             .ToList();
@@ -148,8 +148,67 @@ public class BoardController(AppDbContext appDbContext) : Controller
         return View(createOneTaskViewModel);
     }
 
-    public IActionResult Privacy()
+    [HttpGet]
+    public IActionResult CreateOneBoard([FromQuery] Guid workspaceId, [FromQuery] string returnUrl)
     {
-        return View();
+        if (!(workspaceId == null || workspaceId == Guid.Empty))
+            ViewData["WorkspaceId"] = workspaceId;
+        else
+            return RedirectToAction("Index", "Workspace");
+
+        if (returnUrl is not null)
+        {
+            TempData["ReturnUrl"] = returnUrl;
+            ViewData["ReturnUrl"] = returnUrl;
+        }
+
+
+        var viewModel = new CreateOneBoardViewModel();
+        viewModel.Assignments = appDbContext.ProjectUserAssociations
+            .Where(a => a.ProjectId == workspaceId)
+            .Select(a => new UserAssignmentViewModel()
+            {
+                Id = a.UserId,
+                FullName = $"{a.User.FirstName} {a.User.LastName}"
+            }).ToList();
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    public IActionResult CreateOneBoard([FromForm] CreateOneBoardViewModel createOneBoardViewModel)
+    {
+        if (ModelState.IsValid)
+        {
+            appDbContext.Boards.Add(new Board()
+            {
+                // TODO: Add description property. To do that first of all, add new column in database whose name will be 
+                Title = createOneBoardViewModel.Title,
+                ProjectId = createOneBoardViewModel.WorkspaceId,
+                Users = createOneBoardViewModel.Assignments
+                            .Where(a => a.IsChecked)
+                            .Select(a => new BoardUserAssociation()
+                            {
+                                AppUserId = a.Id,
+                            }).ToList(),
+                Stages = createOneBoardViewModel.Stages
+                    .Select(s => new Stage()
+                    {
+                        StageName = s.StageName,
+                        Description = s.Description
+                    }).ToList()
+            });
+
+            appDbContext.SaveChanges();
+
+            var returnUrl = TempData["ReturnUrl"];
+            if (returnUrl != null)
+            {
+                return Redirect(returnUrl.ToString() ?? "/");
+            }
+            return RedirectToAction("Index", "Workspace");
+        }
+
+        return View(createOneBoardViewModel);
     }
 }
