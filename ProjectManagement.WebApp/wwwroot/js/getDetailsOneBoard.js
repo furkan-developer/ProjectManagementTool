@@ -40,7 +40,7 @@ allTask.forEach((element) => {
     options[1].addEventListener("click", function (e) {
       // Delete Operation
       console.log(taskId);
-      
+
       fetch("https://localhost:7184/Board/DeleteOneTask", {
         method: "POST",
         body: JSON.stringify({
@@ -99,7 +99,19 @@ allStageBody.forEach((element) => {
           if (data.isSuccess) {
             this.insertBefore(draggingTask, this.lastElementChild);
           } else {
-            alert(data.errorMessage);
+            Toastify({
+              text: `${data.errorMessage}`,
+              duration: 2000,
+              newWindow: true,
+              close: true,
+              gravity: "top", // `top` or `bottom`
+              position: "center", // `left`, `center` or `right`
+              stopOnFocus: true, // Prevents dismissing of toast on hover
+              style: {
+                background: "linear-gradient(to right, #f6d365, #fda085)"
+              },
+              onClick: function () {}, // Callback after click
+            }).showToast();
           }
         })
         .catch((error) => console.error("Unable to add item.", error));
