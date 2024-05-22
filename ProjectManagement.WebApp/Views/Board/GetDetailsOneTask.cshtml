@@ -1,0 +1,110 @@
+@model GetDetailsOneTaskViewModel
+
+@{
+    ViewData["Title"] = "GetDetailsOneTask";
+    Layout = "~/Views/Shared/_BootstrapLayout.cshtml";
+}
+
+@section StyleSheets {
+    <link rel="stylesheet" type="text/css" href="~/lib/toastify-js/toastify.min.css">
+    <link rel="stylesheet" href="~/css/get-details-one-task.css" asp-append-version="true">
+}
+
+@section Scripts {
+    <script src="~/js/get-details-one-task.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script type="text/javascript" src="~/lib/toastify-js/toastify.min.js"></script>
+}
+
+<div class="d-flex top border-bottom pb-2">
+    <div class="complete-button btn btn-outline-success align-self-center my"><svg stroke="currentColor"
+            fill="currentColor" stroke-width="0" version="1.1" viewBox="0 0 16 16" height="1em" width="1em"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M6.21 14.339l-6.217-6.119 3.084-3.035 3.133 3.083 6.713-6.607 3.084 3.035-9.797 9.643zM1.686 8.22l4.524 4.453 8.104-7.976-1.391-1.369-6.713 6.607-3.133-3.083-1.391 1.369z">
+            </path>
+        </svg><span class="ps-2">Mark Complete</span></div>
+    <div class="task-created-info d-flex flex-column justify-content-center align-items-center border-start ps-2">
+        <span>Created</span><span>19 May</span>
+    </div>
+    <div class="task-duedata-info d-flex flex-column justify-content-center align-items-center border-start ps-2">
+        <span>Due data</span><span>21 May</span>
+    </div>
+</div>
+<div class="pt-3 pe-3">
+    <p class="h2">Task title</p>
+    <p class="">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis sequi natus delectus numquam
+        debitis impedit, odit eum labore distinctio dolorum expedita qui, at iste. Ad pariatur consequatur nesciunt
+        tenetur. Iure.</p>
+
+    <div class="sub-tasks mt-4">
+        <p class="h5">Sub tasks</p>
+        <div class="d-flex gap-2">
+            <div class="input-group">
+                <div class="input-group-text">
+                    <input id="sub-task-input-check" class="form-check-input mt-0" type="checkbox">
+                </div>
+                <input id="sub-task-input-text" type="text" class="form-control">
+            </div>
+            <div id="add-sub-task-button" class="btn btn-primary">Add</div>
+        </div>
+        <hr>
+        <div class="sub-tasks-list mb-3 pe-5">
+            <div data-sub-task-id="" class="d-flex align-items-center justify-content-between sub-task">
+                <div class="d-flex align-items-center gap-2">
+                    <input id="sub-task-checkbox" type="checkbox" class="form-check-input">
+                    <p class="lead mb-0">Sub task name</p>
+                </div>
+                <svg id="sub-task-delete-icon" stroke="currentColor" fill="currentColor" stroke-width="0"
+                    viewBox="0 0 448 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M268 416h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12zM432 80h-82.41l-34-56.7A48 48 0 0 0 274.41 0H173.59a48 48 0 0 0-41.16 23.3L98.41 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16v336a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128h16a16 16 0 0 0 16-16V96a16 16 0 0 0-16-16zM171.84 50.91A6 6 0 0 1 177 48h94a6 6 0 0 1 5.15 2.91L293.61 80H154.39zM368 464H80V128h288zm-212-48h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12z">
+                    </path>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="border-start comments-section">
+    <div class="comments__wrapper">
+        <div id="comments" class="comments">
+            @* <div class="comment incoming">
+                <div class="sender">Ali</div>
+                <div class="text">Merhaba! Nasılsın?</div>
+            </div>
+            <div class="comment outgoing">
+                <div class="sender">Ben</div>
+                <div class="text">İyiyim, sen nasılsın?</div>
+            </div> *@
+            @if(Model.Comments.Count > 0)
+            {
+                foreach (var comment in Model.Comments)
+                {
+                    @* if the comment belongs to the current user *@
+                    if(comment.hasAssignmentToCurrentUser){
+                        <div class="comment outgoing">
+                            <div class="sender">@comment.FromUser</div>
+                            <div class="text">@comment.Content</div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="comment incoming">
+                            <div class="sender">@comment.FromUser</div>
+                            <div class="text">@comment.Content</div>
+                        </div>
+                    }
+                }
+            }
+            else
+            {
+                <p>There is not comment corresponding to the task yet</p>
+            }
+        </div>
+        <div class="comment-input">
+            @* <input id="comment-input" type="text" placeholder="Mesajınızı yazın..."> *@
+             <textarea name="" data-job-id="@Model.JobId" id="comment-input" rows="1"></textarea>
+            <button id="add-comment-button" type="button">Gönder</button>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -219,5 +220,110 @@ public class BoardController(AppDbContext appDbContext) : Controller
         }
 
         return View(createOneBoardViewModel);
+    }
+
+    // [Authorize(Roles = "project-user,project-manager")]
+    [HttpGet("{jobId:guid}")]
+    public async Task<IActionResult> GetDetailsOneTask([FromRoute] Guid jobId, string? returnUrl, [FromServices] UserManager<AppUser> userManager)
+    {
+        appDbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+
+        var user = await userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            if (returnUrl != null)
+                return Redirect(returnUrl.ToString() ?? "/");
+            return RedirectToAction(nameof(WorkspaceController.Index));
+        }
+        if (User.IsInRole("project-user"))
+        {
+            bool hasTask = appDbContext.JobUserAssociations.Any(a => a.UserId == user.Id && a.JobId == jobId);
+            if (!hasTask)
+            {
+                Guid boardId = appDbContext.Jobs
+                    .Include(j => j.Stage)
+                    .ThenInclude(s => s.Board)
+                    .SingleOrDefault(j => j.Id == jobId).Stage.BoardId;
+
+                return RedirectToAction(nameof(GetDetailsOneBoard), new { BoardId = boardId });
+            }
+        }
+
+        var job = appDbContext.Jobs.SingleOrDefault(j => j.Id == jobId);
+        if (job == null)
+            return View(null);
+
+        var comments = appDbContext.Comments
+            .Include(c => c.Sender)
+            .Where(c => c.JobId == job.Id)
+            .OrderBy(c => c.CreatedOn).ToList();
+        var listCommentViewModel = new List<ListCommentViewModel>();
+        if (comments is not null)
+        {
+            listCommentViewModel = comments.Select(c => new ListCommentViewModel
+            {
+                Content = c.Content,
+                hasAssignmentToCurrentUser = c.SenderId == user.Id ? true : false,
+                FromUser = $"{c.Sender.FirstName} {c.Sender.LastName}"
+            }).ToList();
+        }
+
+
+        var viewModel = new GetDetailsOneTaskViewModel()
+        {
+            Title = job.Title,
+            Description = job.Description,
+            StartDate = job.StartDate,
+            DueDate = job.DueDate,
+            JobId = job.Id,
+            Comments = listCommentViewModel
+        };
+        return View(viewModel);
+    }
+
+
+    [HttpPost]
+    public async Task<JsonResult> HasAssignmentAgainstTask([FromBody] CheckAssignmentJobDTO dto, [FromServices] UserManager<AppUser> userManager)
+    {
+        var user = await userManager.GetUserAsync(User);
+        if (user == null)
+            return Json(new { isSuccess = false, errorMessage = "The user not found" });
+        if (User.IsInRole("project-user"))
+        {
+
+            bool hasAssociation = appDbContext.JobUserAssociations.Where(a => a.UserId == user.Id && a.JobId == dto.JobId).Any();
+            if (!hasAssociation)
+                return Json(new { isSuccess = false });
+        }
+
+
+        return Json(new { isSuccess = true });
+    }
+
+    [HttpPost]
+    // [Authorize(Roles = "project-manager,project-user")]
+    public async Task<JsonResult> PostComment([FromBody] CreateCommentDTO dto, [FromServices] UserManager<AppUser> userManager)
+    {
+        if (ModelState.IsValid)
+        {
+            var user = await userManager.GetUserAsync(User);
+
+            appDbContext.Comments.Add(new Comment
+            {
+                Content = dto.Content,
+                JobId = dto.ToJob,
+                SenderId = user.Id
+            });
+            appDbContext.SaveChanges();
+
+            return Json(new { isSuccess = true });
+        }
+
+        var errorMessages = new List<string>();
+        foreach (var modelState in ModelState.Values)
+            foreach (var error in modelState.Errors)
+                errorMessages.Add(error.ErrorMessage);
+
+        return Json(new { isSuccess = false, errorMessages = errorMessages });
     }
 }

@@ -33,9 +33,29 @@ allTask.forEach((element) => {
 
     let taskId = this.getAttribute("data-task-id");
     let options = taskContextMenu.querySelectorAll("ul li");
-    options[0].addEventListener("click", function (e) {
+    options[0].addEventListener("click", function (ev) {
       // get more details operation
-      console.log(e.currentTarget);
+      console.log(`clicked : ${ev.currentTarget}`);
+      fetch(`${LOCALHOST}Board/HasAssignmentAgainstTask`, {
+        method: "POST",
+        body: JSON.stringify({
+          jobId: taskId,
+        }),
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      })
+        .then((response) => response.json())
+        .then(data => {
+          if(data.isSuccess){
+            window.location.href = `${LOCALHOST}board/getdetailsonetask/${taskId}`;
+          }
+          else{
+            alert("You don't have assignment against the task")  
+          }
+        })
+        .catch(err => console.log(err))
     });
     options[1].addEventListener("click", function (e) {
       // Delete Operation
@@ -108,7 +128,7 @@ allStageBody.forEach((element) => {
               position: "center", // `left`, `center` or `right`
               stopOnFocus: true, // Prevents dismissing of toast on hover
               style: {
-                background: "linear-gradient(to right, #f6d365, #fda085)"
+                background: "linear-gradient(to right, #f6d365, #fda085)",
               },
               onClick: function () {}, // Callback after click
             }).showToast();
