@@ -26,7 +26,8 @@ namespace ProjectManagement.WebApp.Data
         public DbSet<ProjectUserAssociation> ProjectUserAssociations { get; set; }
         public DbSet<BoardUserAssociation> BoardUserAssociations { get; set; }
         public DbSet<JobUserAssociation> JobUserAssociations { get; set; }
-
+        public DbSet<Comment> Comments { get; set; }
+        
         #endregion
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
@@ -112,6 +113,19 @@ namespace ProjectManagement.WebApp.Data
                 .WithOne(d => d.Job)
                 .HasForeignKey(d => d.JobId)
                 .IsRequired(required: true)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Comment>()
+                .HasOne( c => c.Sender)
+                .WithMany( s => s.Comments)
+                .HasForeignKey( c=> c.SenderId)
+                .IsRequired(required:false)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Comment>()
+                .HasOne(c => c.Job)
+                .WithMany(j => j.Comments)
+                .HasForeignKey(c => c.JobId)
                 .OnDelete(DeleteBehavior.Cascade);
             #endregion
 

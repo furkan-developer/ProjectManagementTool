@@ -19,5 +19,6 @@ namespace ProjectManagement.WebApp.Models.Identity
         public ICollection<JobUserAssociation> Jobs { get; set; } = new List<JobUserAssociation>();
 
         public ICollection<BoardUserAssociation> Boards { get; set; } = new List<BoardUserAssociation>();
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
     }
 }

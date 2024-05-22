@@ -15,5 +15,6 @@ namespace ProjectManagement.WebApp.Models.Entities
         
         public ICollection<JobUserAssociation> Users { get; set; } = new List<JobUserAssociation>();
         public ICollection<Dependency> Dependencies { get; set; } = new List<Dependency>();
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
     }
 }
