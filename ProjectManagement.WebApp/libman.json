@@ -5,6 +5,14 @@
     {
       "library": "toastify-js@1.12.0",
       "destination": "wwwroot/lib/toastify-js/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "@microsoft/signalr@latest",
+      "destination": "wwwroot/lib/signalr",
+      "files": [
+        "dist/browser/signalr.js"
+      ]
     }
   ]
 }

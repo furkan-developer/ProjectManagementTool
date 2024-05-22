@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManagement.WebApp.Data;
+using ProjectManagement.WebApp.Hubs;
 using ProjectManagement.WebApp.Models.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,6 +51,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddAuthentication();
+
+// SignalR
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
