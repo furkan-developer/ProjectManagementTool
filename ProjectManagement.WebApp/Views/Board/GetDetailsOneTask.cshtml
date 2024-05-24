@@ -11,6 +11,7 @@
 }
 
 @section Scripts {
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/get-details-one-task.js" asp-append-version="true"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script type="text/javascript" src="~/lib/toastify-js/toastify.min.js"></script>
@@ -69,19 +70,20 @@
     <div class="comments__wrapper">
         <div id="comments" class="comments">
             @* <div class="comment incoming">
-                <div class="sender">Ali</div>
-                <div class="text">Merhaba! Nasılsın?</div>
+            <div class="sender">Ali</div>
+            <div class="text">Merhaba! Nasılsın?</div>
             </div>
             <div class="comment outgoing">
-                <div class="sender">Ben</div>
-                <div class="text">İyiyim, sen nasılsın?</div>
+            <div class="sender">Ben</div>
+            <div class="text">İyiyim, sen nasılsın?</div>
             </div> *@
-            @if(Model.Comments.Count > 0)
+            @if (Model.Comments.Count > 0)
             {
                 foreach (var comment in Model.Comments)
                 {
                     @* if the comment belongs to the current user *@
-                    if(comment.hasAssignmentToCurrentUser){
+                    if (comment.hasAssignmentToCurrentUser)
+                    {
                         <div class="comment outgoing">
                             <div class="sender">@comment.FromUser</div>
                             <div class="text">@comment.Content</div>
@@ -98,13 +100,12 @@
             }
             else
             {
-                <p>There is not comment corresponding to the task yet</p>
+                <p id="has-not-comment-info" class="text-center lead">There is not comment associated with the task yet</p>
             }
         </div>
         <div class="comment-input">
-            @* <input id="comment-input" type="text" placeholder="Mesajınızı yazın..."> *@
-             <textarea name="" data-job-id="@Model.JobId" id="comment-input" rows="1"></textarea>
-            <button id="add-comment-button" type="button">Gönder</button>
+            <textarea name="" data-job-id="@Model.JobId" id="comment-input" rows="1"></textarea>
+            <button data-connection-id="" id="add-comment-button" type="button">Send</button>
         </div>
     </div>
 </div>

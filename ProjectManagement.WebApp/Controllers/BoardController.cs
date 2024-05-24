@@ -3,9 +3,11 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using ProjectManagement.WebApp.Data;
+using ProjectManagement.WebApp.Hubs;
 using ProjectManagement.WebApp.Models;
 using ProjectManagement.WebApp.Models.DTOs;
 using ProjectManagement.WebApp.Models.Entities;
@@ -302,7 +304,10 @@ public class BoardController(AppDbContext appDbContext) : Controller
 
     [HttpPost]
     // [Authorize(Roles = "project-manager,project-user")]
-    public async Task<JsonResult> PostComment([FromBody] CreateCommentDTO dto, [FromServices] UserManager<AppUser> userManager)
+    public async Task<JsonResult> PostComment(
+        [FromBody] CreateCommentDTO dto,
+        [FromServices] UserManager<AppUser> userManager,
+        [FromServices] IHubContext<CommentHub> commentHubContext)
     {
         if (ModelState.IsValid)
         {
@@ -315,6 +320,19 @@ public class BoardController(AppDbContext appDbContext) : Controller
                 SenderId = user.Id
             });
             appDbContext.SaveChanges();
+
+            bool hasConnectionId = Request.Headers.TryGetValue("hub-connection-id", out var hubConnectionId);
+            if (!hasConnectionId)
+                return Json(new { isSuccess = false, errorMessages = "the comment has delivered successfully. however, please refresh to page" });
+
+
+            await commentHubContext.Clients
+                .AllExcept(hubConnectionId)
+                .SendAsync("RecieveComment", new
+                {
+                    content = dto.Content,
+                    fullName = $"{user.FirstName} {user.LastName}"
+                });
 
             return Json(new { isSuccess = true });
         }
