@@ -24,10 +24,10 @@ public class BoardController(AppDbContext appDbContext) : Controller
     {
         // TODO: Bind workspaceId parameter to route-data
         ViewData["WorkspaceId"] = workspaceId;
-        var project = appDbContext.Projects.SingleOrDefault( p=> p.Id == workspaceId );
+        var project = appDbContext.Projects.SingleOrDefault(p => p.Id == workspaceId);
 
         ViewData["WorkspaceName"] = project.ProjectName;
-        
+
         // gets all boards by specified id of workspace
         var listBoardsVMs = appDbContext.Boards
             .Where(b => b.ProjectId == workspaceId)
@@ -45,6 +45,7 @@ public class BoardController(AppDbContext appDbContext) : Controller
 
         List<StageDto> StageDtos = appDbContext.Stages
             .Where(s => s.BoardId == boardId)
+            .OrderBy(s => s.CreatedOn)
             .Select(s => new StageDto()
             {
                 StageId = s.Id,
@@ -415,4 +416,39 @@ public class BoardController(AppDbContext appDbContext) : Controller
 
         return Json(new { isSuccess = true });
     }
+
+    [HttpPost]
+    public JsonResult CreateOneStage([FromBody] CreateOneStageViewModel viewModel)
+    {
+
+        if (ModelState.IsValid)
+        {
+            bool hasSameStageName = appDbContext.Stages.Where(s => s.BoardId == viewModel.BoardId).Any(s => s.StageName.Equals(viewModel.StageName));
+            if (hasSameStageName)
+                return Json(new { isSuccess = false, errorMessages = "There is stage which has same name" });
+
+            var stage = new Stage { StageName = viewModel.StageName, BoardId = viewModel.BoardId, Description = "STAGE DESCRIPTION" };
+            appDbContext.Add(stage);
+            appDbContext.SaveChanges();
+
+            return Json(new
+            {
+                isSuccess = true,
+                data = new
+                {
+                    boardId = viewModel.BoardId,
+                    stageId = stage.Id,
+                    stageName = viewModel.StageName,
+                }
+            });
+        }
+
+        var errorMessages = new List<string>();
+        foreach (var modelState in ModelState.Values)
+            foreach (var error in modelState.Errors)
+                errorMessages.Add(error.ErrorMessage);
+
+        return Json(new { isSuccess = false, errorMessages = errorMessages });
+    }
+
 }
