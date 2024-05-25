@@ -27,3 +27,17 @@
 #taskContextMenu ul li:not(:last-child) {
   border-bottom: 1px solid #e0e0e0;
 }
+
+.main-content {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  
+  & > div:first-child {
+    background-color: white;
+    border-top: 1px solid #ced4da;
+  }
+  & > div:nth-child(2) {
+    zoom: 80%;
+    overflow-x: auto;
+  }
+}

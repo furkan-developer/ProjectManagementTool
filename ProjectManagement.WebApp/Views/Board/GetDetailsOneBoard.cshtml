@@ -6,30 +6,68 @@
 }
 
 @section Scripts {
-   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-   <script src="~/js/getDetailsOneBoard.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="~/js/getDetailsOneBoard.js" asp-append-version="true"></script>
 }
 
-@section StyleSheets{
-     <link rel="stylesheet" href="~/css/getDetailsOneBoard.css"/>
-     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+@section StyleSheets {
+    <link rel="stylesheet" href="~/css/getDetailsOneBoard.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 }
 
-  <div class="stages">
-      @foreach (var item in Model.stageDtos)
+
+<div class="board-redirections">
+    <ul class="left-side">
+        <li class="item active-redirection">
+            <svg class="active-redirection-svg" stroke="currentColor" fill="currentColor" stroke-width="0"
+                viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                <path fill="none" d="M0 0h24v24H0z"></path>
+                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"></path>
+            </svg>
+            <span>Board</span>
+        </li>
+        <li class="item">
+            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em"
+                xmlns="http://www.w3.org/2000/svg">
+                <path fill="none" d="M0 0h24v24H0z"></path>
+                <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path>
+            </svg><span>List</span>
+        </li>
+    </ul>
+    <ul class="right-side">
+        <li class="item">
+            <svg stroke="currentColor" fill="currentColor" stroke-width="0" version="1.2" baseProfile="tiny"
+                viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M18 10h-4v-4c0-1.104-.896-2-2-2s-2 .896-2 2l.071 4h-4.071c-1.104 0-2 .896-2 2s.896 2 2 2l4.071-.071-.071 4.071c0 1.104.896 2 2 2s2-.896 2-2v-4.071l4 .071c1.104 0 2-.896 2-2s-.896-2-2-2z">
+                </path>
+            </svg>
+        </li>
+        <li class="item">
+            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em"
+                width="1em" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="256" cy="256" r="48"></circle>
+                <path
+                    d="m470.39 300-.47-.38-31.56-24.75a16.11 16.11 0 0 1-6.1-13.33v-11.56a16 16 0 0 1 6.11-13.22L469.92 212l.47-.38a26.68 26.68 0 0 0 5.9-34.06l-42.71-73.9a1.59 1.59 0 0 1-.13-.22A26.86 26.86 0 0 0 401 92.14l-.35.13-37.1 14.93a15.94 15.94 0 0 1-14.47-1.29q-4.92-3.1-10-5.86a15.94 15.94 0 0 1-8.19-11.82l-5.59-39.59-.12-.72A27.22 27.22 0 0 0 298.76 26h-85.52a26.92 26.92 0 0 0-26.45 22.39l-.09.56-5.57 39.67a16 16 0 0 1-8.13 11.82 175.21 175.21 0 0 0-10 5.82 15.92 15.92 0 0 1-14.43 1.27l-37.13-15-.35-.14a26.87 26.87 0 0 0-32.48 11.34l-.13.22-42.77 73.95a26.71 26.71 0 0 0 5.9 34.1l.47.38 31.56 24.75a16.11 16.11 0 0 1 6.1 13.33v11.56a16 16 0 0 1-6.11 13.22L42.08 300l-.47.38a26.68 26.68 0 0 0-5.9 34.06l42.71 73.9a1.59 1.59 0 0 1 .13.22 26.86 26.86 0 0 0 32.45 11.3l.35-.13 37.07-14.93a15.94 15.94 0 0 1 14.47 1.29q4.92 3.11 10 5.86a15.94 15.94 0 0 1 8.19 11.82l5.56 39.59.12.72A27.22 27.22 0 0 0 213.24 486h85.52a26.92 26.92 0 0 0 26.45-22.39l.09-.56 5.57-39.67a16 16 0 0 1 8.18-11.82c3.42-1.84 6.76-3.79 10-5.82a15.92 15.92 0 0 1 14.43-1.27l37.13 14.95.35.14a26.85 26.85 0 0 0 32.48-11.34 2.53 2.53 0 0 1 .13-.22l42.71-73.89a26.7 26.7 0 0 0-5.89-34.11zm-134.48-40.24a80 80 0 1 1-83.66-83.67 80.21 80.21 0 0 1 83.66 83.67z">
+                </path>
+            </svg>
+        </li>
+    </ul>
+</div>
+
+<div class="stages">
+    @foreach (var item in Model.stageDtos)
     {
         <div class="stage" data-stage-id="@item.StageId">
             <div class="stage-header">
                 <p>@item.StageName</p>
-                <a href="/Board/CreateOneTask?boardId=@Model.BoardId&stageId=@item.StageId&returnUrl=/Board/GetDetailsOneBoard?boardId=@Model.BoardId">
-                    <svg stroke="currentColor"
-                        fill="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 448 512"
-                        height="1em"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path>
+                <a
+                    href="/Board/CreateOneTask?boardId=@Model.BoardId&stageId=@item.StageId&returnUrl=/Board/GetDetailsOneBoard?boardId=@Model.BoardId">
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="1em"
+                        width="1em" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z">
+                        </path>
                     </svg>
                 </a>
             </div>
@@ -37,7 +75,7 @@
                 @foreach (var task in item.JobDTOs)
                 {
                     <div class="task__wrapper" data-task-id="@task.JobId">
-                        @if(task.Priority == JobPriority.low)
+                        @if (task.Priority == JobPriority.low)
                         {
                             <div class="task-priority-low"></div>
                         }
@@ -52,15 +90,12 @@
                         <div class="task">
                             <div class="task-top">
                                 <div class="due-date">
-                                    <svg stroke="currentColor"
-                                         fill="currentColor"
-                                         stroke-width="0"
-                                         viewBox="0 0 24 24"
-                                         height="1em"
-                                         width="1em"
-                                         xmlns="http://www.w3.org/2000/svg">
+                                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
+                                        height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
                                         <path fill="none" d="M0 0h24v24H0V0z"></path>
-                                        <path d="M7 11h2v2H7v-2zm14-5v14c0 1.1-.9 2-2 2H5a2 2 0 0 1-2-2l.01-14c0-1.1.88-2 1.99-2h1V2h2v2h8V2h2v2h1c1.1 0 2 .9 2 2zM5 8h14V6H5v2zm14 12V10H5v10h14zm-4-7h2v-2h-2v2zm-4 0h2v-2h-2v2z"></path>
+                                        <path
+                                            d="M7 11h2v2H7v-2zm14-5v14c0 1.1-.9 2-2 2H5a2 2 0 0 1-2-2l.01-14c0-1.1.88-2 1.99-2h1V2h2v2h8V2h2v2h1c1.1 0 2 .9 2 2zM5 8h14V6H5v2zm14 12V10H5v10h14zm-4-7h2v-2h-2v2zm-4 0h2v-2h-2v2z">
+                                        </path>
                                     </svg>
                                     <span>@task.DueDate.ToShortDateString()</span>
                                 </div>
@@ -73,13 +108,13 @@
                             <div class="task-footer__wrapper">
                                 <div>
                                     <div class="task-footer">
-                                        @if(task.Priority == JobPriority.low)
+                                        @if (task.Priority == JobPriority.low)
                                         {
                                             <div class="task-priority-bagde task-priority-low">
                                                 Low
                                             </div>
                                         }
-                                        else if(task.Priority == JobPriority.medium)
+                                        else if (task.Priority == JobPriority.medium)
                                         {
                                             <div class="task-priority-bagde task-priority-medium">
                                                 Medium
@@ -91,11 +126,11 @@
                                                 High
                                             </div>
                                         }
-                                       
+
                                         <div class="assignment">
                                             <ul>
                                                 @* TODO: Fixed *@
-                                                @if(task.Assignments.Count <= 3)
+                                                @if (task.Assignments.Count <= 3)
                                                 {
                                                     foreach (var name in task.Assignments)
                                                     {
@@ -114,52 +149,52 @@
                                         </div>
                                     </div>
                                 </div>
-                                <svg stroke="currentColor"
-                                     fill="currentColor"
-                                     stroke-width="0"
-                                     viewBox="0 0 512 512"
-                                     height="1em"
-                                     width="1em"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M346.5 240H272v-74.5c0-8.8-7.2-16-16-16s-16 7.2-16 16V240h-74.5c-8.8 0-16 6-16 16s7.5 16 16 16H240v74.5c0 9.5 7 16 16 16s16-7.2 16-16V272h74.5c8.8 0 16-7.2 16-16s-7.2-16-16-16z"></path>
-                                    <path d="M256 76c48.1 0 93.3 18.7 127.3 52.7S436 207.9 436 256s-18.7 93.3-52.7 127.3S304.1 436 256 436c-48.1 0-93.3-18.7-127.3-52.7S76 304.1 76 256s18.7-93.3 52.7-127.3S207.9 76 256 76m0-28C141.1 48 48 141.1 48 256s93.1 208 208 208 208-93.1 208-208S370.9 48 256 48z"></path>
+                                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512"
+                                    height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M346.5 240H272v-74.5c0-8.8-7.2-16-16-16s-16 7.2-16 16V240h-74.5c-8.8 0-16 6-16 16s7.5 16 16 16H240v74.5c0 9.5 7 16 16 16s16-7.2 16-16V272h74.5c8.8 0 16-7.2 16-16s-7.2-16-16-16z">
+                                    </path>
+                                    <path
+                                        d="M256 76c48.1 0 93.3 18.7 127.3 52.7S436 207.9 436 256s-18.7 93.3-52.7 127.3S304.1 436 256 436c-48.1 0-93.3-18.7-127.3-52.7S76 304.1 76 256s18.7-93.3 52.7-127.3S207.9 76 256 76m0-28C141.1 48 48 141.1 48 256s93.1 208 208 208 208-93.1 208-208S370.9 48 256 48z">
+                                    </path>
                                 </svg>
                             </div>
                         </div>
                     </div>
                 }
 
-                
-                <a href="/Board/CreateOneTask?boardId=@Model.BoardId&stageId=@item.StageId&returnUrl=/Board/GetDetailsOneBoard?boardId=@Model.BoardId" class="add-task-button">
-                    <svg stroke="currentColor"
-                         fill="currentColor"
-                         stroke-width="0"
-                         viewBox="0 0 448 512"
-                         height="1em"
-                         width="1em"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path>
+
+                <a href="/Board/CreateOneTask?boardId=@Model.BoardId&stageId=@item.StageId&returnUrl=/Board/GetDetailsOneBoard?boardId=@Model.BoardId"
+                    class="add-task-button">
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="1em"
+                        width="1em" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z">
+                        </path>
                     </svg>
                     <span>Add Task</span>
                 </a>
             </div>
         </div>
     }
-  </div>
+</div>
+
+
+
 
 @* @if (User.IsInRole(AppRoles.Admin))
 {
-    <h2>Admin</h2>
+<h2>Admin</h2>
 }
 else if (User.IsInRole(AppRoles.ProjectManager))
 {
-    <h2>Project Manager</h2>
+<h2>Project Manager</h2>
 }
 else if (User.IsInRole(AppRoles.User))
 {
-    <h2>User</h2>
+<h2>User</h2>
 }
 else if (User.IsInRole(AppRoles.ProjectUser))
 {
-    <h2>Project User</h2>
+<h2>Project User</h2>
 } *@
