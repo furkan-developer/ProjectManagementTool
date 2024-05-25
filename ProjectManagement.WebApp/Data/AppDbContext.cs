@@ -27,6 +27,7 @@ namespace ProjectManagement.WebApp.Data
         public DbSet<BoardUserAssociation> BoardUserAssociations { get; set; }
         public DbSet<JobUserAssociation> JobUserAssociations { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<SubJob> SubJobs { get; set; }
         
         #endregion
 
@@ -126,6 +127,12 @@ namespace ProjectManagement.WebApp.Data
                 .HasOne(c => c.Job)
                 .WithMany(j => j.Comments)
                 .HasForeignKey(c => c.JobId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<SubJob>()
+                .HasOne( s=> s.Job)
+                .WithMany( j => j.SubJobs)
+                .HasForeignKey(s => s.JobId)
                 .OnDelete(DeleteBehavior.Cascade);
             #endregion
 
