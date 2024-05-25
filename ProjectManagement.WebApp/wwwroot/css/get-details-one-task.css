@@ -98,3 +98,35 @@ html {
 .comment-input button:hover {
   background-color: #0056b3;
 }
+
+.sub-task {
+  padding: 0.4rem 0.7rem;
+  & input[type="checkbox"] {
+    padding: 0.6rem;
+
+    &:checked {
+      background-color: var(--bs-green);
+    }
+  }
+
+  & svg {
+    color: var(--bs-danger);
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+
+  &:hover {
+    background-color: var(--bs-gray-200);
+    border-radius: 0.3rem;
+  }
+}
+
+/* TODO: fix */
+/* .sub-tasks {
+  height: 100%;
+  overflow: hidden;
+}
+.sub-tasks-list {
+  height: 100%;
+  overflow: hidden;
+} */

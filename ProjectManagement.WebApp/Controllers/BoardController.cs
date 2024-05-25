@@ -270,6 +270,11 @@ public class BoardController(AppDbContext appDbContext) : Controller
             }).ToList();
         }
 
+        var listSubJobsViewModel = appDbContext.SubJobs
+            .Where(s => s.JobId == jobId)
+            .Select(s => new ListSubTaskViewModel { Id = s.Id, Title = s.Title, IsComplete = s.IsComplete })
+            .OrderByDescending( s=> s.IsComplete == true)
+            .ToList();
 
         var viewModel = new GetDetailsOneTaskViewModel()
         {
@@ -278,7 +283,8 @@ public class BoardController(AppDbContext appDbContext) : Controller
             StartDate = job.StartDate,
             DueDate = job.DueDate,
             JobId = job.Id,
-            Comments = listCommentViewModel
+            Comments = listCommentViewModel,
+            SubJobs = listSubJobsViewModel,
         };
         return View(viewModel);
     }
@@ -343,5 +349,63 @@ public class BoardController(AppDbContext appDbContext) : Controller
                 errorMessages.Add(error.ErrorMessage);
 
         return Json(new { isSuccess = false, errorMessages = errorMessages });
+    }
+
+    [HttpPost]
+    public JsonResult CreateOneSubTask([FromBody] CreateOneSubTaskViewModel viewModel)
+    {
+        if (ModelState.IsValid)
+        {
+            var hasCurrentTitle = appDbContext.SubJobs.Where(s => s.JobId == viewModel.TaskId).Any(s => s.Title.Equals(viewModel.Title));
+            if (hasCurrentTitle)
+                return Json(new { isSuccess = false, errorMessages = "There is sub task which has same title" });
+
+            var subJob = new SubJob()
+            {
+                Title = viewModel.Title,
+                IsComplete = viewModel.IsComplete,
+                JobId = viewModel.TaskId,
+            };
+
+            appDbContext.SubJobs.Add(subJob);
+            appDbContext.SaveChanges();
+
+            return Json(new { isSuccess = true, subTaskId = subJob.Id });
+        }
+
+        var errorMessages = new List<string>();
+        foreach (var modelState in ModelState.Values)
+            foreach (var error in modelState.Errors)
+                errorMessages.Add(error.ErrorMessage);
+
+        return Json(new { isSuccess = false, errorMessages = errorMessages });
+    }
+
+    [HttpPut]
+    public IActionResult UpdateOneSubTaskStatus([FromHeader] Guid subTaskId)
+    {
+        bool hasSubjob = appDbContext.SubJobs.Any(s => s.Id == subTaskId);
+        if (!hasSubjob)
+            return Json(new { isSuccess = false, errorMessages = "There is no avaliable the task" });
+
+        var subJob = appDbContext.SubJobs.SingleOrDefault(s => s.Id == subTaskId);
+        subJob.IsComplete = !subJob.IsComplete;
+        appDbContext.SaveChanges();
+
+        return Json(new { isSuccess = true });
+    }
+
+    [HttpDelete]
+    public IActionResult DeleteOneSubTask([FromHeader] Guid subTaskId)
+    {
+        bool hasSubjob = appDbContext.SubJobs.Any(s => s.Id == subTaskId);
+        if (!hasSubjob)
+            return Json(new { isSuccess = false, errorMessages = "There is no avaliable the task" });
+
+        int effectedRowsNumber = appDbContext.SubJobs.Where(s => s.Id == subTaskId).ExecuteDelete();
+        if (!(effectedRowsNumber > 0))
+            return Json(new { isSuccess = false, errorMessages = "Delete process is failed. Again after time" });
+
+        return Json(new { isSuccess = true });
     }
 }
