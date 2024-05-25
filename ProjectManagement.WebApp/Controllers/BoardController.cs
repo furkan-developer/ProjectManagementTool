@@ -24,6 +24,10 @@ public class BoardController(AppDbContext appDbContext) : Controller
     {
         // TODO: Bind workspaceId parameter to route-data
         ViewData["WorkspaceId"] = workspaceId;
+        var project = appDbContext.Projects.SingleOrDefault( p=> p.Id == workspaceId );
+
+        ViewData["WorkspaceName"] = project.ProjectName;
+        
         // gets all boards by specified id of workspace
         var listBoardsVMs = appDbContext.Boards
             .Where(b => b.ProjectId == workspaceId)
@@ -36,6 +40,9 @@ public class BoardController(AppDbContext appDbContext) : Controller
     [Authorize]
     public IActionResult GetDetailsOneBoard([FromQuery] Guid boardId)
     {
+        var board = appDbContext.Boards.SingleOrDefault(b => b.Id == boardId);
+        ViewData["WorkspaceId"] = board.ProjectId;
+
         List<StageDto> StageDtos = appDbContext.Stages
             .Where(s => s.BoardId == boardId)
             .Select(s => new StageDto()
@@ -273,7 +280,7 @@ public class BoardController(AppDbContext appDbContext) : Controller
         var listSubJobsViewModel = appDbContext.SubJobs
             .Where(s => s.JobId == jobId)
             .Select(s => new ListSubTaskViewModel { Id = s.Id, Title = s.Title, IsComplete = s.IsComplete })
-            .OrderByDescending( s=> s.IsComplete == true)
+            .OrderByDescending(s => s.IsComplete == true)
             .ToList();
 
         var viewModel = new GetDetailsOneTaskViewModel()
