@@ -11,6 +11,11 @@ for (let index = 0; index < workspaces.length; index++) {
     if(colorOrder >= workspaceColors.length)
         colorOrder = 0;
 
-    workspaces[index].style.backgroundColor = `#${workspaceColors[colorOrder]}`
+    workspaces[index].style.border = `4px solid #${workspaceColors[colorOrder]}`;
+    workspaces[index].style.color = `#${workspaceColors[colorOrder]}`;
+    
+    let button = workspaces[index].querySelector("a");
+    button.style.border = `2px solid #${workspaceColors[colorOrder]}`;
+
     ++colorOrder;
 }

@@ -1,20 +1,20 @@
 .main-content {
-  overflow-x: visible;
+  overflow-x: auto;
   background-color: #f0f0f0;
   zoom: normal;
   padding: 2rem;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 .workspace-grid--main-content {
-  flex-wrap: wrap;
   gap: 1rem;
+  padding: 4rem;
 }
 
 .workspace-warning--main-content {
   justify-content: center;
   align-content: center;
-  flex-wrap: wrap;
 }
 
 .workspace-warning {

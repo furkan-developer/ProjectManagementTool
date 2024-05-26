@@ -3,6 +3,7 @@
 }
 
 .workspace {
+  background-color: white;
   display: flex;
   flex-direction: column;
   /* align-content: center; */
@@ -11,23 +12,18 @@
   text-align: center;
   color: white;
   border-radius: 1rem;
+  padding: 1rem;
 
   & p {
     margin-block: 0.5rem 2rem;
     letter-spacing: 2px;
+    color: black !important;
   }
 
   & .btn {
-    border: 2px solid white;
     padding: 0.4rem 0.7rem;
     align-self: center;
-    color: white;
     text-decoration: none;
     border-radius: 1.5rem;
-
-    &:hover {
-      background-color: white;
-      color: black;
-    }
   }
 }
