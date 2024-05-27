@@ -4,12 +4,12 @@
 // Write your JavaScript code.
 const LOCALHOST = "https://localhost:7184/";
 
-function taskDragStart(ev){
-    ev.currentTarget.classList.add("dragging");
+function taskDragStart(ev) {
+  ev.currentTarget.classList.add("dragging");
 }
 
-function taskDragEnd(ev){
-    ev.currentTarget.classList.remove("dragging");
+function taskDragEnd(ev) {
+  ev.currentTarget.classList.remove("dragging");
 }
 
 function allowDrogOver(e) {
@@ -31,7 +31,9 @@ function setStageToDrop(ev) {
   if (ev.currentTarget === currentStageOfDraggingTask) {
   } else {
     draggingTaskId = draggingTask.getAttribute("data-task-id");
-    let connectionId = document.getElementById("websocket-connection-container").getAttribute("data-connection-id");
+    let connectionId = document
+      .getElementById("websocket-connection-container")
+      .getAttribute("data-connection-id");
 
     fetch("https://localhost:7184/Board/UpdateStageOfOneTask", {
       method: "POST",
@@ -43,16 +45,13 @@ function setStageToDrop(ev) {
       headers: {
         Accept: "application/json",
         "Content-type": "application/json; charset=UTF-8",
-        "Hub-Connection-Id": `${connectionId}`
+        "Hub-Connection-Id": `${connectionId}`,
       },
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.isSuccess) {
-          dropingArea.insertBefore(
-            draggingTask,
-            dropingArea.lastElementChild
-          );
+          dropingArea.insertBefore(draggingTask, dropingArea.lastElementChild);
         } else {
           Toastify({
             text: `${data.errorMessage}`,
@@ -84,6 +83,8 @@ function createNewTask({ title, id, dueDate, priority, assignments }) {
   // add events
   taskWrapper.addEventListener("dragstart", taskDragStart);
   taskWrapper.addEventListener("dragend", taskDragEnd);
+  taskWrapper.addEventListener("contextmenu", contextMenuHandler);
+  
 
   // Priority div
   const priorityDiv = document.createElement("div");
@@ -253,4 +254,73 @@ function createNewTask({ title, id, dueDate, priority, assignments }) {
   taskFooterWrapperDiv.appendChild(plusIconSvg);
 
   return taskWrapper;
+}
+
+function contextMenuHandler(event) {
+  event.preventDefault(); // prevent browser's contextmenu
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    `     
+    <div id="taskContextMenu" class="taskContextMenu">
+      <ul>
+        <li>More details</li>
+        <li>Delete</li>
+      </ul>
+    </div>`
+  );
+  let taskContextMenu = document.getElementById("taskContextMenu");
+  taskContextMenu.addEventListener("mouseleave", function () {
+    taskContextMenu.remove();
+  });
+
+  taskContextMenu.style.display = "block";
+  taskContextMenu.style.left = event.pageX - 10 + "px";
+  taskContextMenu.style.top = event.pageY - 10 + "px";
+
+  let taskId = event.currentTarget.getAttribute("data-task-id");
+  let options = taskContextMenu.querySelectorAll("ul li");
+  options[0].addEventListener("click", function (ev) {
+    // get more details operation
+    fetch(`${LOCALHOST}Board/HasAssignmentAgainstTask`, {
+      method: "POST",
+      body: JSON.stringify({
+        jobId: taskId,
+      }),
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.isSuccess) {
+          window.location.href = `${LOCALHOST}board/getdetailsonetask/${taskId}`;
+        } else {
+          alert("You don't have assignment related task");
+        }
+      })
+      .catch((err) => console.log(err));
+  });
+  options[1].addEventListener("click", function (e) {
+    // Delete Operation
+    fetch("https://localhost:7184/Board/DeleteOneTask", {
+      method: "POST",
+      body: JSON.stringify({
+        jobId: taskId,
+      }),
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.isSuccess) {
+          event.target.closest(".task__wrapper").remove();
+        } else {
+          alert(data.errorMessage);
+        }
+      })
+      .catch((error) => console.error("Unable to add item.", error));
+  });
 }
