@@ -9,7 +9,7 @@ createStageButton.addEventListener("click", function (event) {
   if (!(event.target == createStageFormCloseButton)) {
     if (createStageForm.classList.contains("d-none"))
       createStageForm.classList.remove("d-none");
-      createStageFormPiece.classList.remove("d-none");
+    createStageFormPiece.classList.remove("d-none");
   }
 });
 
@@ -25,12 +25,16 @@ createStageFormCloseButton.addEventListener("click", function () {
 function createStage(element) {
   let boardId = element.getAttribute("data-board-id");
   let stageName = document.getElementById("create-stage-input").value.trim();
+  let connectionId = document
+    .getElementById("websocket-connection-container")
+    .getAttribute("data-connection-id");
 
   fetch(`${LOCALHOST}board/createonestage`, {
     method: "POST",
     headers: {
       Accept: "application/json",
       "Content-type": "application/json; charset=UTF-8",
+      "Hub-Connection-Id": `${connectionId}`,
     },
     body: JSON.stringify({
       boardId: `${boardId}`,
@@ -44,12 +48,12 @@ function createStage(element) {
           text: `${result.data.stageName} has been created`,
           duration: 3000,
           close: true,
-          gravity: "top", 
-          position: "center", 
-          stopOnFocus: true, 
+          gravity: "top",
+          position: "center",
+          stopOnFocus: true,
           style: {
             background: "linear-gradient(to right, #a8e063, #56ab2f)",
-          }
+          },
         }).showToast();
 
         let stages = document.getElementById("stages");
@@ -83,28 +87,25 @@ function createStage(element) {
       `
         );
 
-        
         //  document.querySelectorAll("#stage-body");
-        
+
         // .addEventListener("drop",setStageToDrop)
         // stages.lastChild.addEventListener("dragover", function (e) {
         //   e.preventDefault();
         // });
 
         console.log(stages.lastChild);
-        
-
       } else {
         Toastify({
           text: `${result.errorMessages.toString()}`,
           duration: 3000,
           close: true,
-          gravity: "top", 
-          position: "center", 
+          gravity: "top",
+          position: "center",
           stopOnFocus: true,
           style: {
             background: "linear-gradient(to right, #f6d365, #fda085)",
-          }
+          },
         }).showToast();
       }
     })

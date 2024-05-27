@@ -109,7 +109,7 @@
     </ul>
 </div>
 
-<div id="stages" class="stages">
+<div id="stages" class="stages" data-board-id="@Model.BoardId">
     @foreach (var item in Model.stageDtos)
     {
         <div class="stage" data-stage-id="@item.StageId">

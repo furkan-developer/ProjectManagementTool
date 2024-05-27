@@ -265,13 +265,55 @@ connection.on("AddNewTaskToStage", function (data) {
 
 connection.on("DeleteOneTask", function (data) {
   let allTasks = document.querySelectorAll(".task__wrapper");
-  
+
   for (let index = 0; index < allTasks.length; index++) {
     let avalibaleTaskId = allTasks[index].getAttribute("data-task-id");
     if (avalibaleTaskId == data.taskId) {
-        allTasks[index].remove();
+      allTasks[index].remove();
       break;
     }
+  }
+});
+
+connection.on("CreateOneStage", function ({ boardId, stageId, stageName }) {
+  console.log(boardId);
+  console.log(stageName);
+  console.log(stageId);
+
+  let stagesArea = document.getElementById("stages");
+  if (stagesArea.getAttribute("data-board-id") == boardId) {
+    console.log("Bu board doğru board");
+    stagesArea.insertAdjacentHTML(
+      "beforeend",
+      `
+        <div class="stage" data-stage-id="${stageId}">
+          <div class="stage-header">
+              <p>${stageName}</p>
+              <a onclick="showDialog(this)" data-board-id="${boardId}">
+                  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="1em"
+                      width="1em" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                          d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z">
+                      </path>
+                  </svg>
+              </a>
+          </div>
+          <div id="stage-body" class="stage-body" ondrop="setStageToDrop(event)" ondragover="allowDrogOver(event)">
+              <a onclick="showDialog(this)" data-board-id="${boardId}" class="add-task-button">
+                  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="1em"
+                      width="1em" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                          d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z">
+                      </path>
+                  </svg>
+                  <span>Add Task</span>
+              </a>
+          </div>
+        </div>
+      `
+    );
+  } else {
+    console.log("Bu board yanlış board. stage buraya eklenmeyecek");
   }
 });
 

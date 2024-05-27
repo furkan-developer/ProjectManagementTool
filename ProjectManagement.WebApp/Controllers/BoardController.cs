@@ -389,7 +389,9 @@ public class BoardController(AppDbContext appDbContext) : Controller
     }
 
     [HttpPost]
-    public JsonResult CreateOneStage([FromBody] CreateOneStageViewModel viewModel)
+    public async Task<JsonResult> CreateOneStage(
+        [FromBody] CreateOneStageViewModel viewModel,
+        [FromServices] IHubContext<GetDetailsOneBoardHub> getDetailsOneBoardHubContext)
     {
 
         if (ModelState.IsValid)
@@ -401,6 +403,19 @@ public class BoardController(AppDbContext appDbContext) : Controller
             var stage = new Stage { StageName = viewModel.StageName, BoardId = viewModel.BoardId, Description = "STAGE DESCRIPTION" };
             appDbContext.Add(stage);
             appDbContext.SaveChanges();
+
+            bool hasConnectionId = Request.Headers.TryGetValue("hub-connection-id", out var hubConnectionId);
+            // if (!hasConnectionId)
+            //     return Json(new { isSuccess = false, errorMessages = "Stage of task has updated successfully. however, please refresh to page" });
+
+            await getDetailsOneBoardHubContext.Clients
+                .AllExcept(hubConnectionId)
+                .SendAsync("CreateOneStage", new
+                {
+                    boardId = viewModel.BoardId,
+                    stageId = stage.Id,
+                    stageName = viewModel.StageName,
+                });
 
             return Json(new
             {
