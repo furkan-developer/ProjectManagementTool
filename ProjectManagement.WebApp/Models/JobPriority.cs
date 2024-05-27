@@ -2,8 +2,8 @@ namespace ProjectManagement.WebApp.Models
 {
     public enum JobPriority
     {
-        low,
-        medium,
-        high
+        low = 0,
+        medium = 1,
+        high =2 
     }
 }

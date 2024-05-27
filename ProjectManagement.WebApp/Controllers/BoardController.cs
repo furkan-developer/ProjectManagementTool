@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Identity.Client;
 using ProjectManagement.WebApp.Data;
 using ProjectManagement.WebApp.Hubs;
@@ -451,4 +452,72 @@ public class BoardController(AppDbContext appDbContext) : Controller
         return Json(new { isSuccess = false, errorMessages = errorMessages });
     }
 
+    [HttpGet("{boardId:guid}")]
+    public JsonResult GetUsersAt([FromRoute] Guid boardId)
+    {
+        List<UserAssignmentViewModel> users = appDbContext.BoardUserAssociations
+         .Where(a => a.BoardId == boardId)
+         .Include(a => a.AppUser)
+         .Select(a => new UserAssignmentViewModel()
+         {
+             Id = a.AppUser.Id,
+             FullName = $"{a.AppUser.FirstName} {a.AppUser.LastName}"
+         }).ToList();
+
+        // var viewModel = new CreateOneTaskViewModel() { Assignments = users };
+        return Json(new { isSuccess = true, users = users });
+    }
+
+    [HttpPost]
+    public async Task<JsonResult> CreateOneTask([FromBody] CreateOneTaskVM viewModel)
+    {
+        if (ModelState.IsValid)
+        {
+            // TODO: Check whether there is task which has same name
+
+            var job = new Job()
+            {
+                Title = viewModel.Title,
+                Description = viewModel.Description,
+                Priority = viewModel.Priority,
+                DueDate = viewModel.DueDate,
+                Users = viewModel.Assignments.Select(a => new JobUserAssociation
+                {
+                    UserId = a
+                }).ToList(),
+                StageId = viewModel.StageId
+            };
+            appDbContext.Jobs.Add(job);
+            appDbContext.SaveChanges();
+
+            var userNames = appDbContext.JobUserAssociations
+                .Where(a => a.JobId == job.Id)
+                .Include(a => a.User)
+                .Select( a => $"{a.User.UserName}")
+                .ToList();
+
+
+            return Json(new
+            {
+                isSuccess = true,
+                data = new
+                {
+                    id = job.Id,
+                    title = job.Title,
+                    description = job.Description,
+                    dueDate = job.DueDate,
+                    assignments = userNames,
+                    stageId = job.StageId,
+                    priority = job.Priority
+                }
+            });
+        }
+
+        var errorMessages = new List<string>();
+        foreach (var modelState in ModelState.Values)
+            foreach (var error in modelState.Errors)
+                errorMessages.Add(error.ErrorMessage);
+
+        return Json(new { isSuccess = false, errorMessages = errorMessages });
+    }
 }
