@@ -3,12 +3,8 @@ const allTask = document.querySelectorAll("#stage-body .task__wrapper");
 
 allTask.forEach((element) => {
   element.setAttribute("draggable", "true");
-  element.addEventListener("dragstart", function () {
-    this.classList.add("dragging");
-  });
-  element.addEventListener("dragend", function () {
-    this.classList.remove("dragging");
-  });
+  element.addEventListener("dragstart", taskDragStart);
+  element.addEventListener("dragend", taskDragEnd);
 
   element.addEventListener("contextmenu", function (event) {
     event.preventDefault(); // prevent browser's contextmenu
@@ -35,7 +31,6 @@ allTask.forEach((element) => {
     let options = taskContextMenu.querySelectorAll("ul li");
     options[0].addEventListener("click", function (ev) {
       // get more details operation
-      console.log(`clicked : ${ev.currentTarget}`);
       fetch(`${LOCALHOST}Board/HasAssignmentAgainstTask`, {
         method: "POST",
         body: JSON.stringify({
@@ -51,15 +46,13 @@ allTask.forEach((element) => {
           if (data.isSuccess) {
             window.location.href = `${LOCALHOST}board/getdetailsonetask/${taskId}`;
           } else {
-            alert("You don't have assignment against the task");
+            alert("You don't have assignment related task");
           }
         })
         .catch((err) => console.log(err));
     });
     options[1].addEventListener("click", function (e) {
       // Delete Operation
-      console.log(taskId);
-
       fetch("https://localhost:7184/Board/DeleteOneTask", {
         method: "POST",
         body: JSON.stringify({
@@ -88,54 +81,7 @@ allStageBody.forEach((element) => {
     e.preventDefault();
   });
 
-  element.addEventListener("drop", function () {
-    let draggingTask = document.querySelector(".dragging");
-    let currentStageOfDraggingTask = draggingTask.closest(".stage-body");
-    let currentStageIdOfDraggingTask = draggingTask
-      .closest(".stage")
-      .getAttribute("data-stage-id");
-    let targetStageIdOfDraggingTask =
-      this.closest(".stage").getAttribute("data-stage-id");
-
-    if (this === currentStageOfDraggingTask) {
-    } else {
-      draggingTaskId = draggingTask.getAttribute("data-task-id");
-
-      fetch("https://localhost:7184/Board/UpdateStageOfOneTask", {
-        method: "POST",
-        body: JSON.stringify({
-          fromStage: currentStageIdOfDraggingTask,
-          toStage: targetStageIdOfDraggingTask,
-          taskId: draggingTaskId,
-        }),
-        headers: {
-          Accept: "application/json",
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.isSuccess) {
-            this.insertBefore(draggingTask, this.lastElementChild);
-          } else {
-            Toastify({
-              text: `${data.errorMessage}`,
-              duration: 2000,
-              newWindow: true,
-              close: true,
-              gravity: "top", // `top` or `bottom`
-              position: "center", // `left`, `center` or `right`
-              stopOnFocus: true, // Prevents dismissing of toast on hover
-              style: {
-                background: "linear-gradient(to right, #f6d365, #fda085)",
-              },
-              onClick: function () {}, // Callback after click
-            }).showToast();
-          }
-        })
-        .catch((error) => console.error("Unable to add item.", error));
-    }
-  });
+  element.addEventListener("drop", setStageToDrop);
 
   // element.addEventListener("dragenter", function () {
   //   this.style.opacity = "0.5";
@@ -203,9 +149,6 @@ taskForm.addEventListener("submit", function (event) {
     .then((response) => response.json())
     .then((result) => {
       if (result.isSuccess) {
-        alert("process has competed successfully");
-        console.log(result.data);
-
         const currentStages = document.querySelectorAll("[data-stage-id]");
 
         let associatedStage;
@@ -250,6 +193,10 @@ function createNewTask({ title, id, dueDate, priority, assignments }) {
   taskWrapper.className = "task__wrapper";
   taskWrapper.setAttribute("data-task-id", `${id}`);
   taskWrapper.setAttribute("draggable", "true");
+
+  // add events
+  taskWrapper.addEventListener("dragstart",taskDragStart);
+  taskWrapper.addEventListener("dragend",taskDragEnd);
 
   // Priority div
   const priorityDiv = document.createElement("div");

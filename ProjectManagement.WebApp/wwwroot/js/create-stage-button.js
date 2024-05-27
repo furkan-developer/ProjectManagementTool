@@ -53,15 +53,13 @@ function createStage(element) {
         }).showToast();
 
         let stages = document.getElementById("stages");
-        console.log(stages);
         stages.insertAdjacentHTML(
           "beforeend",
           `
             <div class="stage" data-stage-id="${result.data.stageId}">
               <div class="stage-header">
                   <p>${result.data.stageName}</p>
-                  <a
-                      href="/Board/CreateOneTask?boardId=${result.data.boardId}&stageId=${result.data.stageId}&returnUrl=/Board/GetDetailsOneBoard?boardId=${result.data.boardId}">
+                  <a onclick="showDialog(this)" data-board-id="${boardId}">
                       <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="1em"
                           width="1em" xmlns="http://www.w3.org/2000/svg">
                           <path
@@ -70,9 +68,8 @@ function createStage(element) {
                       </svg>
                   </a>
               </div>
-              <div id="stage-body" class="stage-body">
-                  <a href="/Board/CreateOneTask?boardId=${result.data.boardId}&stageId=${result.data.stageId}&returnUrl=/Board/GetDetailsOneBoard?boardId=${result.data.boardId}"
-                      class="add-task-button">
+              <div id="stage-body" class="stage-body" ondrop="setStageToDrop(event)" ondragover="allowDrogOver(event)">
+                  <a onclick="showDialog(this)" data-board-id="${boardId}" class="add-task-button">
                       <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="1em"
                           width="1em" xmlns="http://www.w3.org/2000/svg">
                           <path
@@ -85,6 +82,18 @@ function createStage(element) {
             </div>
       `
         );
+
+        
+        //  document.querySelectorAll("#stage-body");
+        
+        // .addEventListener("drop",setStageToDrop)
+        // stages.lastChild.addEventListener("dragover", function (e) {
+        //   e.preventDefault();
+        // });
+
+        console.log(stages.lastChild);
+        
+
       } else {
         Toastify({
           text: `${result.errorMessages.toString()}`,
