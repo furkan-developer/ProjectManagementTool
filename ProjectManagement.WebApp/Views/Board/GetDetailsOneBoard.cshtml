@@ -114,8 +114,7 @@
         <div class="stage" data-stage-id="@item.StageId">
             <div class="stage-header">
                 <p>@item.StageName</p>
-                <a
-                    href="/Board/CreateOneTask?boardId=@Model.BoardId&stageId=@item.StageId&returnUrl=/Board/GetDetailsOneBoard?boardId=@Model.BoardId">
+                <a onclick="showDialog(this)" data-board-id="@Model.BoardId">
                     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="1em"
                         width="1em" xmlns="http://www.w3.org/2000/svg">
                         <path

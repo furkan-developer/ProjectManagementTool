@@ -69,10 +69,16 @@
     text-transform: uppercase;
   }
 
+  & a:hover{
+    cursor: pointer;
+  }
+
   & svg {
     width: 2rem;
     height: 2rem;
     color: #444;
+
+    transition: all 0.2s ease-in;
 
     &:hover{
       width: 2.8rem;
