@@ -28,7 +28,7 @@ namespace ProjectManagement.WebApp.Data
         public DbSet<JobUserAssociation> JobUserAssociations { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<SubJob> SubJobs { get; set; }
-        
+
         #endregion
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
@@ -117,10 +117,10 @@ namespace ProjectManagement.WebApp.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Comment>()
-                .HasOne( c => c.Sender)
-                .WithMany( s => s.Comments)
-                .HasForeignKey( c=> c.SenderId)
-                .IsRequired(required:false)
+                .HasOne(c => c.Sender)
+                .WithMany(s => s.Comments)
+                .HasForeignKey(c => c.SenderId)
+                .IsRequired(required: false)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Comment>()
@@ -130,8 +130,8 @@ namespace ProjectManagement.WebApp.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<SubJob>()
-                .HasOne( s=> s.Job)
-                .WithMany( j => j.SubJobs)
+                .HasOne(s => s.Job)
+                .WithMany(j => j.SubJobs)
                 .HasForeignKey(s => s.JobId)
                 .OnDelete(DeleteBehavior.Cascade);
             #endregion
@@ -147,18 +147,54 @@ namespace ProjectManagement.WebApp.Data
             SeedUserRoles(builder, out userIds);
 
             // These will use for data seeding in entity related
+
+            // for projects
             Guid blogSiteProjectGuid = Guid.NewGuid();
             Guid stockTrackingProjectGuid = Guid.NewGuid();
+            Guid yazilimProjesiProjectGuid = Guid.NewGuid();
+            Guid pazarlamaKampanyasıProjectGuid = Guid.NewGuid();
+            Guid yeniUrunTasarimiProjectGuid = Guid.NewGuid();
+
+            // for boards
+            Guid frontendBoarGuid = Guid.NewGuid();
+            Guid backendBoarGuid = Guid.NewGuid();
+            Guid analizBoardGuid = Guid.NewGuid();
+            Guid gelistirmeBoardGuid = Guid.NewGuid();
+
+            // for stages
             Guid homePageStageGuid = Guid.NewGuid();
-            Guid supplierPageGuid = Guid.NewGuid();
+            Guid analizStageGuid = Guid.NewGuid();
+            Guid tasarimStageGuid = Guid.NewGuid();
+            Guid kodlamaStageGuid = Guid.NewGuid();
+            Guid testStageGuid = Guid.NewGuid();
+
+            // for jobs
             Guid dependJobGuid = Guid.NewGuid();
-            Guid designUIJobGuid = Guid.NewGuid();
             Guid requirenmentAnalysisJobGuid = Guid.NewGuid();
+            Guid designUIJobGuid = Guid.NewGuid();
+            Guid testStageJob1Guid = Guid.NewGuid();
+            Guid testStageJob2Guid = Guid.NewGuid();
+            Guid kodlamaStageJob1Guid = Guid.NewGuid();
+            Guid kodlamaStageJob2Guid = Guid.NewGuid();
+            Guid tasarimStageJob1Guid = Guid.NewGuid();
+            Guid tasarimStageJob2Guid = Guid.NewGuid();
+            Guid tasarimStageJob3Guid = Guid.NewGuid();
+            Guid tasarimStageJob4Guid = Guid.NewGuid();
+            Guid tasarimStageJob5Guid = Guid.NewGuid();
+            Guid tasarimStageJob6Guid = Guid.NewGuid();
+            Guid tasarimStageJob7Guid = Guid.NewGuid();
+            Guid analizStageJob1Guid = Guid.NewGuid();
+            Guid analizStageJob2Guid = Guid.NewGuid();
+            Guid analizStageJob3Guid = Guid.NewGuid();
+            Guid analizStageJob4Guid = Guid.NewGuid();
+            Guid analizStageJob5Guid = Guid.NewGuid();
+
+
+            Guid supplierPageGuid = Guid.NewGuid();
             Guid dependencyGuid = Guid.NewGuid();
             Guid developerConstGuid = Guid.NewGuid();
             Guid serverConstGuid = Guid.NewGuid();
-            Guid frontendBoarGuid = Guid.NewGuid();
-            Guid backendBoarGuid = Guid.NewGuid();
+
 
             builder.Entity<Project>().HasData(
                 new Project
@@ -178,6 +214,33 @@ namespace ProjectManagement.WebApp.Data
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now.AddDays(60),
                     CreatedOn = DateTime.Now,
+                },
+                new Project
+                {
+                    Id = yazilimProjesiProjectGuid,
+                    ProjectName = "Yazılım Projesi",
+                    Description = "Bir yazılım ürününün geliştirilmesi",
+                    StartDate = new DateTime(2024, 1, 1),
+                    CreatedOn = DateTime.Now,
+                    EndDate = new DateTime(2024, 12, 31)
+                },
+                new Project
+                {
+                    Id = pazarlamaKampanyasıProjectGuid,
+                    ProjectName = "Pazarlama Kampanyası",
+                    Description = "Yeni bir ürünün pazarlama stratejisinin oluşturulması",
+                    StartDate = new DateTime(2024, 3, 1),
+                    CreatedOn = DateTime.Now,
+                    EndDate = new DateTime(2024, 6, 30)
+                },
+                new Project
+                {
+                    Id = yeniUrunTasarimiProjectGuid,
+                    ProjectName = "Yeni Ürün Tasarımı",
+                    Description = "Yeni bir ürünün tasarım sürecinin yürütülmesi",
+                    StartDate = new DateTime(2024, 5, 1),
+                    CreatedOn = DateTime.Now,
+                    EndDate = new DateTime(2024, 9, 30)
                 }
             );
 
@@ -187,7 +250,9 @@ namespace ProjectManagement.WebApp.Data
                new ProjectUserAssociation { ProjectId = stockTrackingProjectGuid, UserId = userIds["project-manager"] },
                new ProjectUserAssociation { ProjectId = stockTrackingProjectGuid, UserId = userIds["user"] },
                new ProjectUserAssociation { ProjectId = stockTrackingProjectGuid, UserId = userIds["project-user-2"] },
-               new ProjectUserAssociation { ProjectId = stockTrackingProjectGuid, UserId = userIds["project-user-3"] }
+               new ProjectUserAssociation { ProjectId = stockTrackingProjectGuid, UserId = userIds["project-user-3"] },
+               new ProjectUserAssociation { ProjectId = yazilimProjesiProjectGuid, UserId = userIds["project-manager"] },
+               new ProjectUserAssociation { ProjectId = yazilimProjesiProjectGuid, UserId = userIds["project-user-2"] }
             );
 
             builder.Entity<BoardUserAssociation>().HasData(
@@ -198,7 +263,19 @@ namespace ProjectManagement.WebApp.Data
 
             builder.Entity<Board>().HasData(
                 new Board { Id = frontendBoarGuid, ProjectId = stockTrackingProjectGuid, Title = "Front-end board" },
-                new Board { Id = backendBoarGuid, ProjectId = stockTrackingProjectGuid, Title = "Back-end board" }
+                new Board { Id = backendBoarGuid, ProjectId = stockTrackingProjectGuid, Title = "Back-end board" },
+                new Board
+                {
+                    Id = analizBoardGuid,
+                    Title = "Analiz",
+                    ProjectId = yazilimProjesiProjectGuid,
+                },
+                new Board
+                {
+                    Id = gelistirmeBoardGuid,
+                    Title = "Geliştirme",
+                    ProjectId = yazilimProjesiProjectGuid,
+                }
             );
 
             builder.Entity<Stage>().HasData(
@@ -217,6 +294,38 @@ namespace ProjectManagement.WebApp.Data
                     Description = "Planning stage for the stock tracking project",
                     CreatedOn = DateTime.Now,
                     BoardId = frontendBoarGuid
+                },
+                new Stage
+                {
+                    Id = analizStageGuid,
+                    StageName = "Analiz",
+                    Description = "Geliştirme aşaması için analiz aşaması",
+                    CreatedOn = DateTime.Now,
+                    BoardId = gelistirmeBoardGuid
+                },
+                new Stage
+                {
+                    Id = tasarimStageGuid,
+                    StageName = "Tasarım",
+                    Description = "Geliştirme aşaması için tasarım aşaması",
+                    CreatedOn = DateTime.Now,
+                    BoardId = gelistirmeBoardGuid
+                },
+                new Stage
+                {
+                    Id = kodlamaStageGuid,
+                    StageName = "Kodlama",
+                    Description = "Geliştirme aşaması için kodlama aşaması",
+                    CreatedOn = DateTime.Now,
+                    BoardId = gelistirmeBoardGuid
+                },
+                new Stage
+                {
+                    Id = testStageGuid,
+                    StageName = "Test",
+                    Description = "Geliştirme aşaması için test aşaması",
+                    CreatedOn = DateTime.Now,
+                    BoardId = gelistirmeBoardGuid
                 }
             );
 
@@ -253,6 +362,174 @@ namespace ProjectManagement.WebApp.Data
                     Priority = Models.JobPriority.high,
                     CreatedOn = DateTime.Now,
                     StageId = homePageStageGuid,
+                },
+                new Job
+                {
+                    Id = analizStageJob1Guid,
+                    Title = "Müşteri toplantısı ve gereksinimlerin belirlenmesi",
+                    Description = "Müşteri ile bir araya gelerek yazılım gereksinimlerinin detaylı bir şekilde incelenmesi",
+                    StartDate = new DateTime(2024, 1, 1),
+                    CreatedOn = new DateTime(2024, 1, 1),
+                    DueDate = new DateTime(2024, 1, 15),
+                    Priority = Models.JobPriority.medium,
+                    StageId = analizStageGuid,
+                },
+                new Job
+                {
+                    Id = analizStageJob2Guid,
+                    Title = "Fonksiyonel gereksinimlerin belirlenmesi",
+                    Description = "Yazılımın işlevsel gereksinimlerinin ayrıntılı bir şekilde belirlenmesi",
+                    StartDate = new DateTime(2024, 1, 2),
+                    CreatedOn = new DateTime(2024, 1, 2),
+                    DueDate = new DateTime(2024, 1, 16),
+                    Priority = Models.JobPriority.low,
+                    StageId = analizStageGuid
+                },
+                new Job
+                {
+                    Id = tasarimStageJob1Guid,
+                    Title = "Prototip tasarımı",
+                    Description = "Yazılımın prototipinin tasarlanması ve kullanıcı geri bildirimlerinin alınması",
+                    StartDate = new DateTime(2024, 1, 3),
+                    CreatedOn = new DateTime(2024, 1, 3),
+                    DueDate = new DateTime(2024, 1, 17),
+                    Priority = Models.JobPriority.high,
+                    StageId = tasarimStageGuid,
+                },
+                new Job
+                {
+                    Id = tasarimStageJob2Guid,
+                    Title = "Arayüz tasarım revizyonu",
+                    Description = "Kullanıcı arayüzünün revize edilmesi ve geliştirilmiş bir versiyonunun hazırlanması",
+                    StartDate = new DateTime(2024, 1, 4),
+                    CreatedOn = new DateTime(2024, 1, 4),
+                    DueDate = new DateTime(2024, 1, 18),
+                    Priority = Models.JobPriority.high,
+                    StageId = tasarimStageGuid,
+                },
+                new Job
+                {
+                    Id = kodlamaStageJob1Guid,
+                    Title = "Backend API geliştirme",
+                    Description = "Yazılımın arka uç (backend) API'larının geliştirilmesi ve test edilmesi",
+                    StartDate = new DateTime(2024, 1, 5),
+                    CreatedOn = new DateTime(2024, 1, 5),
+                    DueDate = new DateTime(2024, 1, 19),
+                    Priority = Models.JobPriority.high,
+                    StageId = kodlamaStageGuid,
+                },
+                new Job
+                {
+                    Id = kodlamaStageJob2Guid,
+                    Title = "Frontend komponent geliştirme",
+                    Description = "Kullanıcı arayüzünün ön uç (frontend) bileşenlerinin geliştirilmesi ve entegrasyon testlerinin yapılması",
+                    StartDate = new DateTime(2024, 1, 6),
+                    CreatedOn = new DateTime(2024, 1, 6),
+                    DueDate = new DateTime(2024, 1, 20),
+                    Priority = Models.JobPriority.medium,
+                    StageId = kodlamaStageGuid
+                },
+                new Job
+                {
+                    Id = testStageJob1Guid,
+                    Title = "Birinci aşama test senaryolarının hazırlanması",
+                    Description = "Yazılımın test edilmesi için birinci aşama test senaryolarının hazırlanması",
+                    StartDate = new DateTime(2024, 1, 7),
+                    CreatedOn = new DateTime(2024, 1, 7),
+                    DueDate = new DateTime(2024, 1, 21),
+                    Priority = Models.JobPriority.low,
+                    StageId = testStageGuid
+                },
+                new Job
+                {
+                    Id = testStageJob2Guid,
+                    Title = "Sistem entegrasyon testlerinin yapılması",
+                    Description = "Yazılımın farklı bileşenlerinin bir araya getirilerek sistem entegrasyon testlerinin yapılması",
+                    StartDate = new DateTime(2024, 1, 8),
+                    CreatedOn = new DateTime(2024, 1, 8),
+                    DueDate = new DateTime(2024, 1, 22),
+                    Priority = Models.JobPriority.medium,
+                    StageId = testStageGuid
+                },
+                new Job
+                {
+                    Id = analizStageJob3Guid,
+                    Title = "Mevcut sistem analizi",
+                    Description = "Mevcut sistem ve iş süreçlerinin detaylı bir şekilde incelenmesi",
+                    StartDate = new DateTime(2024, 1, 14),
+                    DueDate = new DateTime(2024, 1, 28),
+                    Priority = Models.JobPriority.medium,
+                    StageId = analizStageGuid
+                },
+                new Job
+                {
+                    Id = analizStageJob4Guid,
+                    Title = "Müşteri ihtiyaçlarının belirlenmesi",
+                    Description = "Müşteri gereksinimlerinin toplanması ve analiz edilmesi",
+                    StartDate = new DateTime(2024, 1, 15),
+                    DueDate = new DateTime(2024, 1, 29),
+                    Priority =  Models.JobPriority.low,
+                    StageId = analizStageGuid,
+                },
+                new Job
+                {
+                    Id = analizStageJob5Guid,
+                    Title = "Analiz sonuçlarının dokümantasyonu",
+                    Description = "Yapılan analiz çalışmalarının sonuçlarının detaylı bir şekilde dokümante edilmesi",
+                    StartDate = new DateTime(2024, 1, 16),
+                    DueDate = new DateTime(2024, 1, 30),
+                    Priority =  Models.JobPriority.low,
+                    StageId = analizStageGuid
+                },
+                new Job
+                {
+                    Id = tasarimStageJob3Guid,
+                    Title = "Kullanıcı arayüzünün mockup'larının hazırlanması",
+                    Description = "Yazılımın kullanıcı arayüzü tasarımının ilk mockup'ları oluşturulması",
+                    StartDate = new DateTime(2024, 1, 9),
+                    DueDate = new DateTime(2024, 1, 23),
+                    Priority = Models.JobPriority.medium,
+                    StageId = tasarimStageGuid,
+                },
+                new Job
+                {
+                    Id = tasarimStageJob4Guid,
+                    Title = "Arayüz tasarımı için renk paletinin belirlenmesi",
+                    Description = "Kullanılacak renklerin ve renk paletinin belirlenmesi",
+                    StartDate = new DateTime(2024, 1, 10),
+                    DueDate = new DateTime(2024, 1, 24),
+                    Priority =  Models.JobPriority.high,
+                    StageId = tasarimStageGuid
+                },
+                new Job
+                {
+                    Id = tasarimStageJob5Guid,
+                    Title = "Arayüzün kullanılabilirlik testlerinin yapılması",
+                    Description = "Kullanıcı arayüzünün kullanılabilirliğinin test edilmesi ve geri bildirimlerin alınması",
+                    StartDate = new DateTime(2024, 1, 11),
+                    DueDate = new DateTime(2024, 1, 25),
+                    Priority = Models.JobPriority.high,
+                    StageId = tasarimStageGuid,
+                },
+                new Job
+                {
+                    Id = tasarimStageJob6Guid,
+                    Title = "Tasarım revizyonu",
+                    Description = "Tasarım aşamasında alınan geri bildirimler doğrultusunda gerekli revizyonların yapılması",
+                    StartDate = new DateTime(2024, 1, 12),
+                    DueDate = new DateTime(2024, 1, 26),
+                    Priority =  Models.JobPriority.high,
+                    StageId = tasarimStageGuid
+                },
+                new Job
+                {
+                    Id = tasarimStageJob7Guid,
+                    Title = "Arayüz animasyonlarının hazırlanması",
+                    Description = "Kullanıcı arayüzünde kullanılacak animasyonların hazırlanması ve uygulanması",
+                    StartDate = new DateTime(2024, 1, 13),
+                    DueDate = new DateTime(2024, 1, 27),
+                    Priority =  Models.JobPriority.high,
+                    StageId = tasarimStageGuid
                 }
             );
 
@@ -382,7 +659,7 @@ namespace ProjectManagement.WebApp.Data
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
 
-             AppUser projectUser3 = new AppUser()
+            AppUser projectUser3 = new AppUser()
             {
                 Id = userIds["project-user-3"],
                 FirstName = "Firat Can",
