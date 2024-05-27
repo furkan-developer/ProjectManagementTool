@@ -108,66 +108,7 @@ public class BoardController(AppDbContext appDbContext) : Controller
 
         return Json(new { isSuccess = true });
     }
-
-
-    [HttpGet]
-    public IActionResult CreateOneTask(Guid boardId, Guid stageId, string? returnUrl)
-    {
-        ViewData["StageId"] = stageId;
-        if (returnUrl is not null)
-        {
-            TempData["ReturnUrl"] = returnUrl;
-            ViewData["ReturnUrl"] = returnUrl;
-        }
-
-        List<UserAssignmentViewModel> users = appDbContext.BoardUserAssociations
-          .Where(a => a.BoardId == boardId)
-          .Include(a => a.AppUser)
-          .Select(a => new UserAssignmentViewModel()
-          {
-              Id = a.AppUser.Id,
-              FullName = $"{a.AppUser.FirstName} {a.AppUser.LastName}"
-          }).ToList();
-
-        var viewModel = new CreateOneTaskViewModel() { Assignments = users };
-
-        return View(viewModel);
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult CreateOneTask([FromForm] CreateOneTaskViewModel createOneTaskViewModel)
-    {
-        if (ModelState.IsValid)
-        {
-            createOneTaskViewModel.Assignments = createOneTaskViewModel.Assignments.Where(a => a.IsChecked).ToList();
-
-            appDbContext.Jobs.Add(new Job
-            {
-                Title = createOneTaskViewModel.Title,
-                Description = createOneTaskViewModel.Description,
-                DueDate = createOneTaskViewModel.DueDate,
-                Priority = createOneTaskViewModel.Priority,
-                StageId = createOneTaskViewModel.StageId,
-                Users = createOneTaskViewModel.Assignments
-                    .Select(a =>
-                        new JobUserAssociation() { UserId = a.Id }
-                    ).ToList()
-            });
-
-            appDbContext.SaveChanges();
-
-            var returnUrl = TempData["ReturnUrl"];
-            if (returnUrl != null)
-            {
-                TempData.Remove("ReturnUrl");
-                return Redirect(returnUrl.ToString() ?? "/");
-            }
-            return RedirectToAction("Index", "Workspace");
-        }
-
-        return View(createOneTaskViewModel);
-    }
+    
 
     [HttpGet]
     public IActionResult CreateOneBoard([FromQuery] Guid workspaceId, [FromQuery] string returnUrl)
