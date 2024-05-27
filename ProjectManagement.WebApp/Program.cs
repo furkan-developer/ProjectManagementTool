@@ -74,5 +74,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<CommentHub>("/commentHub");
+app.MapHub<GetDetailsOneBoardHub>("/getdetailsoneboardhub");
 
 app.Run();

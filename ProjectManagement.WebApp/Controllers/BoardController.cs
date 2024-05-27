@@ -66,7 +66,10 @@ public class BoardController(AppDbContext appDbContext) : Controller
     }
 
     [HttpPost]
-    public async Task<JsonResult> UpdateStageOfOneTask([FromBody] UpdateStageOfOneTaskDto dto, [FromServices] UserManager<AppUser> userManager)
+    public async Task<JsonResult> UpdateStageOfOneTask(
+        [FromBody] UpdateStageOfOneTaskDto dto,
+        [FromServices] UserManager<AppUser> userManager,
+        [FromServices] IHubContext<GetDetailsOneBoardHub> getDetailsOneBoardHubContext)
     {
         appDbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
@@ -93,6 +96,19 @@ public class BoardController(AppDbContext appDbContext) : Controller
         job.StageId = dto.ToStage;
         appDbContext.SaveChanges();
 
+        bool hasConnectionId = Request.Headers.TryGetValue("hub-connection-id", out var hubConnectionId);
+        // if (!hasConnectionId)
+        //     return Json(new { isSuccess = false, errorMessages = "Stage of task has updated successfully. however, please refresh to page" });
+
+        await getDetailsOneBoardHubContext.Clients
+            .AllExcept(hubConnectionId)
+            .SendAsync("UpdateStageOfTask", new
+            {
+                fromStage = dto.FromStage,
+                toStage = dto.ToStage,
+                taskId = dto.TaskId
+            });
+
         return Json(new { isSuccess = true });
     }
 
@@ -108,7 +124,7 @@ public class BoardController(AppDbContext appDbContext) : Controller
 
         return Json(new { isSuccess = true });
     }
-    
+
 
     [HttpGet]
     public IActionResult CreateOneBoard([FromQuery] Guid workspaceId, [FromQuery] string returnUrl)
@@ -410,7 +426,9 @@ public class BoardController(AppDbContext appDbContext) : Controller
     }
 
     [HttpPost]
-    public async Task<JsonResult> CreateOneTask([FromBody] CreateOneTaskVM viewModel)
+    public async Task<JsonResult> CreateOneTask(
+        [FromBody] CreateOneTaskVM viewModel,
+        [FromServices] IHubContext<GetDetailsOneBoardHub> getDetailsOneBoardHubContext)
     {
         if (ModelState.IsValid)
         {
@@ -434,9 +452,25 @@ public class BoardController(AppDbContext appDbContext) : Controller
             var userNames = appDbContext.JobUserAssociations
                 .Where(a => a.JobId == job.Id)
                 .Include(a => a.User)
-                .Select( a => $"{a.User.UserName}")
+                .Select(a => $"{a.User.UserName}")
                 .ToList();
 
+            bool hasConnectionId = Request.Headers.TryGetValue("hub-connection-id", out var hubConnectionId);
+            // if (!hasConnectionId)
+            //     return Json(new { isSuccess = false, errorMessages = "Stage of task has updated successfully. however, please refresh to page" });
+
+            await getDetailsOneBoardHubContext.Clients
+                .AllExcept(hubConnectionId)
+                .SendAsync("AddNewTaskToStage", new
+                {
+                    id = job.Id,
+                    title = job.Title,
+                    description = job.Description,
+                    dueDate = job.DueDate,
+                    assignments = userNames,
+                    stageId = job.StageId,
+                    priority = job.Priority
+                });
 
             return Json(new
             {
