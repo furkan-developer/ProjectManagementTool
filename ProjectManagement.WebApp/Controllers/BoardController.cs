@@ -62,7 +62,7 @@ public class BoardController(AppDbContext appDbContext) : Controller
             })
             .ToList();
 
-        return View(new GetDetailsOneBoardViewModel() { stageDtos = StageDtos, BoardId = boardId });
+        return View(new GetDetailsOneBoardViewModel() { stageDtos = StageDtos, BoardId = boardId, BoardName = board.Title});
     }
 
     [HttpPost]
