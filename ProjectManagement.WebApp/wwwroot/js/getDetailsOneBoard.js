@@ -6,7 +6,7 @@ allTask.forEach((element) => {
   element.addEventListener("dragstart", taskDragStart);
   element.addEventListener("dragend", taskDragEnd);
 
-  element.addEventListener("contextmenu",contextMenuHandler);
+  element.addEventListener("contextmenu", contextMenuHandler);
 });
 
 allStageBody.forEach((element) => {
@@ -258,6 +258,18 @@ connection.on("AddNewTaskToStage", function (data) {
     if (stageBodyId == data.stageId) {
       let lastChildOfStageBody = stageBody.querySelector(".add-task-button");
       stageBody.insertBefore(newTask, lastChildOfStageBody);
+      break;
+    }
+  }
+});
+
+connection.on("DeleteOneTask", function (data) {
+  let allTasks = document.querySelectorAll(".task__wrapper");
+  
+  for (let index = 0; index < allTasks.length; index++) {
+    let avalibaleTaskId = allTasks[index].getAttribute("data-task-id");
+    if (avalibaleTaskId == data.taskId) {
+        allTasks[index].remove();
       break;
     }
   }

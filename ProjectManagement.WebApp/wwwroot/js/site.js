@@ -303,6 +303,11 @@ function contextMenuHandler(event) {
   });
   options[1].addEventListener("click", function (e) {
     // Delete Operation
+
+    let connectionId = document
+      .getElementById("websocket-connection-container")
+      .getAttribute("data-connection-id");
+
     fetch("https://localhost:7184/Board/DeleteOneTask", {
       method: "POST",
       body: JSON.stringify({
@@ -311,6 +316,7 @@ function contextMenuHandler(event) {
       headers: {
         Accept: "application/json",
         "Content-type": "application/json; charset=UTF-8",
+        "Hub-Connection-Id" : `${connectionId}`
       },
     })
       .then((response) => response.json())

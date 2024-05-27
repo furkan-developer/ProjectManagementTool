@@ -113,7 +113,9 @@ public class BoardController(AppDbContext appDbContext) : Controller
     }
 
     [HttpPost]
-    public JsonResult DeleteOneTask([FromBody] DeleteOneTaskDTO dto)
+    public async Task<JsonResult> DeleteOneTask(
+        [FromBody] DeleteOneTaskDTO dto,
+        [FromServices] IHubContext<GetDetailsOneBoardHub> getDetailsOneBoardHubContext)
     {
         var job = appDbContext.Jobs.SingleOrDefault(j => j.Id == dto.JobId);
         if (job is null)
@@ -121,6 +123,17 @@ public class BoardController(AppDbContext appDbContext) : Controller
 
         appDbContext.Jobs.Remove(job);
         appDbContext.SaveChanges();
+
+        bool hasConnectionId = Request.Headers.TryGetValue("hub-connection-id", out var hubConnectionId);
+        // if (!hasConnectionId)
+        //     return Json(new { isSuccess = false, errorMessages = "Stage of task has updated successfully. however, please refresh to page" });
+
+        await getDetailsOneBoardHubContext.Clients
+            .AllExcept(hubConnectionId)
+            .SendAsync("DeleteOneTask", new
+            {
+                taskId = job.Id,
+            });
 
         return Json(new { isSuccess = true });
     }
