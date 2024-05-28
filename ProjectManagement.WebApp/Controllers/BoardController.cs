@@ -62,7 +62,7 @@ public class BoardController(AppDbContext appDbContext) : Controller
             })
             .ToList();
 
-        return View(new GetDetailsOneBoardViewModel() { stageDtos = StageDtos, BoardId = boardId, BoardName = board.Title});
+        return View(new GetDetailsOneBoardViewModel() { stageDtos = StageDtos, BoardId = boardId, BoardName = board.Title });
     }
 
     [HttpPost]
@@ -139,8 +139,9 @@ public class BoardController(AppDbContext appDbContext) : Controller
     }
 
 
+    // [Authorize(Roles = "project-manager")]
     [HttpGet]
-    public IActionResult CreateOneBoard([FromQuery] Guid workspaceId, [FromQuery] string returnUrl)
+    public async Task<IActionResult> CreateOneBoardAsync([FromQuery] Guid workspaceId, [FromQuery] string returnUrl, [FromServices] UserManager<AppUser> userManager)
     {
         if (!(workspaceId == null || workspaceId == Guid.Empty))
             ViewData["WorkspaceId"] = workspaceId;
@@ -153,15 +154,19 @@ public class BoardController(AppDbContext appDbContext) : Controller
             ViewData["ReturnUrl"] = returnUrl;
         }
 
+        var user = await userManager.GetUserAsync(User);
 
         var viewModel = new CreateOneBoardViewModel();
-        viewModel.Assignments = appDbContext.ProjectUserAssociations
+        var allUsersAtProject = appDbContext.ProjectUserAssociations
             .Where(a => a.ProjectId == workspaceId)
             .Select(a => new UserAssignmentViewModel()
             {
                 Id = a.UserId,
                 FullName = $"{a.User.FirstName} {a.User.LastName}"
             }).ToList();
+
+        var filterUsersAtProject = allUsersAtProject.FindAll(u => u.Id != user.Id);
+        viewModel.Assignments = filterUsersAtProject;
 
         return View(viewModel);
     }
