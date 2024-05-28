@@ -8,54 +8,60 @@
     <link rel="stylesheet" href="~/css/workspace.css">
 }
 
-@section NavigationBar{
+@section NavigationBar {
     <nav class="nav-links">
-                <ul class="left-side">
-                    <li class="item page-name">Task Management Tool</li>
-                </ul>
-                <ul class="right-side">
-                    <li class="item">
-                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512"
-                            height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                            <path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"
-                                d="M427.68 351.43C402 320 383.87 304 383.87 217.35 383.87 138 343.35 109.73 310 96c-4.43-1.82-8.6-6-9.95-10.55C294.2 65.54 277.8 48 256 48s-38.21 17.55-44 37.47c-1.35 4.6-5.52 8.71-9.95 10.53-33.39 13.75-73.87 41.92-73.87 121.35C128.13 304 110 320 84.32 351.43 73.68 364.45 83 384 101.61 384h308.88c18.51 0 27.77-19.61 17.19-32.57zM320 384v16a64 64 0 0 1-128 0v-16">
-                            </path>
-                        </svg>
-                    </li>
-                    <li class="item">
-                        <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24"
-                            stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="8" r="5"></circle>
-                            <path d="M20 21a8 8 0 1 0-16 0"></path>
-                        </svg>
-                    </li>
-                    <li class="item">
-                        <svg stroke="currentColor" fill="none" stroke-width="0" viewBox="0 0 15 15" height="1em"
-                            width="1em" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                d="M3 1C2.44771 1 2 1.44772 2 2V13C2 13.5523 2.44772 14 3 14H10.5C10.7761 14 11 13.7761 11 13.5C11 13.2239 10.7761 13 10.5 13H3V2L10.5 2C10.7761 2 11 1.77614 11 1.5C11 1.22386 10.7761 1 10.5 1H3ZM12.6036 4.89645C12.4083 4.70118 12.0917 4.70118 11.8964 4.89645C11.7012 5.09171 11.7012 5.40829 11.8964 5.60355L13.2929 7H6.5C6.22386 7 6 7.22386 6 7.5C6 7.77614 6.22386 8 6.5 8H13.2929L11.8964 9.39645C11.7012 9.59171 11.7012 9.90829 11.8964 10.1036C12.0917 10.2988 12.4083 10.2988 12.6036 10.1036L14.8536 7.85355C15.0488 7.65829 15.0488 7.34171 14.8536 7.14645L12.6036 4.89645Z"
-                                fill="currentColor"></path>
-                        </svg>
-                    </li>
-                </ul>
-            </nav>
+        <ul class="left-side">
+            <li class="item page-name">Task Management Tool</li>
+        </ul>
+        <ul class="right-side">
+            <li class="item">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em"
+                    width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"
+                        d="M427.68 351.43C402 320 383.87 304 383.87 217.35 383.87 138 343.35 109.73 310 96c-4.43-1.82-8.6-6-9.95-10.55C294.2 65.54 277.8 48 256 48s-38.21 17.55-44 37.47c-1.35 4.6-5.52 8.71-9.95 10.53-33.39 13.75-73.87 41.92-73.87 121.35C128.13 304 110 320 84.32 351.43 73.68 364.45 83 384 101.61 384h308.88c18.51 0 27.77-19.61 17.19-32.57zM320 384v16a64 64 0 0 1-128 0v-16">
+                    </path>
+                </svg>
+            </li>
+            <li class="item">
+                <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
+                    stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="8" r="5"></circle>
+                    <path d="M20 21a8 8 0 1 0-16 0"></path>
+                </svg>
+            </li>
+            <li class="item">
+                <a href="/user/logout">
+                    <svg stroke="currentColor" fill="none" stroke-width="0" viewBox="0 0 15 15" height="1em" width="1em"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M3 1C2.44771 1 2 1.44772 2 2V13C2 13.5523 2.44772 14 3 14H10.5C10.7761 14 11 13.7761 11 13.5C11 13.2239 10.7761 13 10.5 13H3V2L10.5 2C10.7761 2 11 1.77614 11 1.5C11 1.22386 10.7761 1 10.5 1H3ZM12.6036 4.89645C12.4083 4.70118 12.0917 4.70118 11.8964 4.89645C11.7012 5.09171 11.7012 5.40829 11.8964 5.60355L13.2929 7H6.5C6.22386 7 6 7.22386 6 7.5C6 7.77614 6.22386 8 6.5 8H13.2929L11.8964 9.39645C11.7012 9.59171 11.7012 9.90829 11.8964 10.1036C12.0917 10.2988 12.4083 10.2988 12.6036 10.1036L14.8536 7.85355C15.0488 7.65829 15.0488 7.34171 14.8536 7.14645L12.6036 4.89645Z"
+                            fill="currentColor"></path>
+                    </svg>
+                </a>
+            </li>
+        </ul>
+    </nav>
 }
 
 @if (Model.Count == 0)
 @* @if (true) *@
 {
     // check workspace number for current user, if any workspace don't assigns to the user this page will render here
-     @section Scripts{
-     <script src="~/js/workspace-warning.js"></script>
+    @section Scripts {
+    <script src="~/js/workspace-warning.js"></script>
     }
 
-    @* TODO: Create View Component for workspace warning  *@
+    @* TODO: Create View Component for workspace warning *@
     if (User.IsInRole("project-manager"))
     {
         <div class="workspace-warning">
             <div class="text">
-                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M449.07 399.08 278.64 82.58c-12.08-22.44-44.26-22.44-56.35 0L51.87 399.08A32 32 0 0 0 80 446.25h340.89a32 32 0 0 0 28.18-47.17zm-198.6-1.83a20 20 0 1 1 20-20 20 20 0 0 1-20 20zm21.72-201.15-5.74 122a16 16 0 0 1-32 0l-5.74-121.95a21.73 21.73 0 0 1 21.5-22.69h.21a21.74 21.74 0 0 1 21.73 22.7z"></path></svg>
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M449.07 399.08 278.64 82.58c-12.08-22.44-44.26-22.44-56.35 0L51.87 399.08A32 32 0 0 0 80 446.25h340.89a32 32 0 0 0 28.18-47.17zm-198.6-1.83a20 20 0 1 1 20-20 20 20 0 0 1-20 20zm21.72-201.15-5.74 122a16 16 0 0 1-32 0l-5.74-121.95a21.73 21.73 0 0 1 21.5-22.69h.21a21.74 21.74 0 0 1 21.73 22.7z">
+                    </path>
+                </svg>
                 <p>Any workspace has not created.</p>
             </div>
             <div class="footer"><a href="#">Create Workspace</a></div>
@@ -64,22 +70,32 @@
     else if (User.IsInRole("project-user"))
     {
         <div class="workspace-warning">
-            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M449.07 399.08 278.64 82.58c-12.08-22.44-44.26-22.44-56.35 0L51.87 399.08A32 32 0 0 0 80 446.25h340.89a32 32 0 0 0 28.18-47.17zm-198.6-1.83a20 20 0 1 1 20-20 20 20 0 0 1-20 20zm21.72-201.15-5.74 122a16 16 0 0 1-32 0l-5.74-121.95a21.73 21.73 0 0 1 21.5-22.69h.21a21.74 21.74 0 0 1 21.73 22.7z"></path></svg>
+            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M449.07 399.08 278.64 82.58c-12.08-22.44-44.26-22.44-56.35 0L51.87 399.08A32 32 0 0 0 80 446.25h340.89a32 32 0 0 0 28.18-47.17zm-198.6-1.83a20 20 0 1 1 20-20 20 20 0 0 1-20 20zm21.72-201.15-5.74 122a16 16 0 0 1-32 0l-5.74-121.95a21.73 21.73 0 0 1 21.5-22.69h.21a21.74 21.74 0 0 1 21.73 22.7z">
+                </path>
+            </svg>
             <p>There is no assigned workspace for you.</p>
         </div>
     }
     else
     {
         <div class="workspace-warning">
-            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M449.07 399.08 278.64 82.58c-12.08-22.44-44.26-22.44-56.35 0L51.87 399.08A32 32 0 0 0 80 446.25h340.89a32 32 0 0 0 28.18-47.17zm-198.6-1.83a20 20 0 1 1 20-20 20 20 0 0 1-20 20zm21.72-201.15-5.74 122a16 16 0 0 1-32 0l-5.74-121.95a21.73 21.73 0 0 1 21.5-22.69h.21a21.74 21.74 0 0 1 21.73 22.7z"></path></svg>
+            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M449.07 399.08 278.64 82.58c-12.08-22.44-44.26-22.44-56.35 0L51.87 399.08A32 32 0 0 0 80 446.25h340.89a32 32 0 0 0 28.18-47.17zm-198.6-1.83a20 20 0 1 1 20-20 20 20 0 0 1-20 20zm21.72-201.15-5.74 122a16 16 0 0 1-32 0l-5.74-121.95a21.73 21.73 0 0 1 21.5-22.69h.21a21.74 21.74 0 0 1 21.73 22.7z">
+                </path>
+            </svg>
             <p>You don't have any authority yet.</p>
         </div>
     }
 }
 else
 {
-    @section Scripts{
-     <script src="~/js/workspace.js"></script>
+    @section Scripts {
+    <script src="~/js/workspace.js"></script>
     }
 
     // will render assigned workspace or one more for the user
@@ -87,13 +103,13 @@ else
     {
         <div class="workspace__wrapper">
             <div class="workspace">
-            <h2>@item.ProjectName</h2>
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae
-                assumenda suscipit tempora laborum laudantium sit?
-                @item.Description
-            </p>
-            <a href="/board/Index?workspaceId=@item.Id.ToString()" class="btn">Go workspace</a>
+                <h2>@item.ProjectName</h2>
+                <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae
+                    assumenda suscipit tempora laborum laudantium sit?
+                    @item.Description
+                </p>
+                <a href="/board/Index?workspaceId=@item.Id.ToString()" class="btn">Go workspace</a>
             </div>
         </div>
     }

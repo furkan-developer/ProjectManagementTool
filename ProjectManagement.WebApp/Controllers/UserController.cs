@@ -104,7 +104,12 @@ namespace ProjectManagement.WebApp.Controllers
             }
             return View(viewModel);
         }
-        public async Task Logout() => await _signInManager.SignOutAsync();
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();    
+
+            return RedirectToAction("Index","Workspace");
+        }
 
         public async Task ClaimsPrincipalExample()
         {
