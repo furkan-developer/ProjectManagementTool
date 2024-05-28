@@ -172,6 +172,8 @@ namespace ProjectManagement.WebApp.Data
             Guid dependJobGuid = Guid.NewGuid();
             Guid requirenmentAnalysisJobGuid = Guid.NewGuid();
             Guid designUIJobGuid = Guid.NewGuid();
+
+
             Guid testStageJob1Guid = Guid.NewGuid();
             Guid testStageJob2Guid = Guid.NewGuid();
             Guid kodlamaStageJob1Guid = Guid.NewGuid();
@@ -195,13 +197,44 @@ namespace ProjectManagement.WebApp.Data
             Guid developerConstGuid = Guid.NewGuid();
             Guid serverConstGuid = Guid.NewGuid();
 
+            builder.Entity<JobUserAssociation>().HasData(
+                new JobUserAssociation{ JobId = testStageJob1Guid, UserId = userIds["project-user-3"]},
+                new JobUserAssociation{ JobId = testStageJob1Guid, UserId = userIds["project-user-4"]},
+                new JobUserAssociation{ JobId = testStageJob2Guid, UserId = userIds["project-user-4"]},
+                new JobUserAssociation{ JobId = kodlamaStageJob1Guid, UserId = userIds["project-user"]},
+                new JobUserAssociation{ JobId = kodlamaStageJob1Guid, UserId = userIds["project-user-2"]},
+                new JobUserAssociation{ JobId = kodlamaStageJob1Guid, UserId = userIds["project-user-5"]},
+                new JobUserAssociation{ JobId = kodlamaStageJob2Guid, UserId = userIds["project-user-5"]},
+                new JobUserAssociation{ JobId = kodlamaStageJob2Guid, UserId = userIds["project-user-3"]},
+                new JobUserAssociation{ JobId = kodlamaStageJob2Guid, UserId = userIds["project-user-6"]},
+                new JobUserAssociation{ JobId = tasarimStageJob1Guid, UserId = userIds["project-user-7"]},
+                new JobUserAssociation{ JobId = tasarimStageJob1Guid, UserId = userIds["project-user-8"]},
+                new JobUserAssociation{ JobId = tasarimStageJob1Guid, UserId = userIds["project-user-9"]},
+                new JobUserAssociation{ JobId = tasarimStageJob2Guid, UserId = userIds["project-user-9"]},
+                new JobUserAssociation{ JobId = tasarimStageJob2Guid, UserId = userIds["project-user"]},
+                new JobUserAssociation{ JobId = tasarimStageJob3Guid, UserId = userIds["project-user-2"]},
+                new JobUserAssociation{ JobId = tasarimStageJob3Guid, UserId = userIds["project-user-4"]},
+                new JobUserAssociation{ JobId = tasarimStageJob3Guid, UserId = userIds["project-user-5"]},
+                new JobUserAssociation{ JobId = tasarimStageJob4Guid, UserId = userIds["project-user-5"]},
+                new JobUserAssociation{ JobId = tasarimStageJob4Guid, UserId = userIds["project-user"]},
+                new JobUserAssociation{ JobId = tasarimStageJob5Guid, UserId = userIds["project-user-8"]},
+                new JobUserAssociation{ JobId = tasarimStageJob6Guid, UserId = userIds["project-user-8"]},
+                new JobUserAssociation{ JobId = tasarimStageJob7Guid, UserId = userIds["project-user-8"]},
+                new JobUserAssociation{ JobId = analizStageJob1Guid, UserId = userIds["project-user-8"]},
+                new JobUserAssociation{ JobId = analizStageJob1Guid, UserId = userIds["project-user-7"]},
+                new JobUserAssociation{ JobId = analizStageJob2Guid, UserId = userIds["project-user-6"]},
+                new JobUserAssociation{ JobId = analizStageJob3Guid, UserId = userIds["project-user-4"]},
+                new JobUserAssociation{ JobId = analizStageJob3Guid, UserId = userIds["project-user-2"]},
+                new JobUserAssociation{ JobId = analizStageJob4Guid, UserId = userIds["project-user-9"]},
+                new JobUserAssociation{ JobId = analizStageJob5Guid, UserId = userIds["project-user-8"]}
+            );
 
             builder.Entity<Project>().HasData(
                 new Project
                 {
                     Id = blogSiteProjectGuid,
-                    ProjectName = "Blog Site Project",
-                    Description = "A project to create a blog site",
+                    ProjectName = "Blog Site Projesi",
+                    Description = "Bu proje, kullanıcıların makaleler ve yazılar paylaşabileceği, okuyucuların yorum yapabileceği ve içeriklerin kategorize edilebileceği bir blog sitesi geliştirmeyi hedeflemektedir. Amacımız, kullanımı kolay bir arayüz ve zengin özellikler ile kullanıcıların etkili bir şekilde içerik oluşturmasını sağlamaktır.",
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now.AddDays(30),
                     CreatedOn = DateTime.Now
@@ -209,8 +242,8 @@ namespace ProjectManagement.WebApp.Data
                 new Project
                 {
                     Id = stockTrackingProjectGuid,
-                    ProjectName = "Stock Tracking Project",
-                    Description = "A project to develop a stock tracking system",
+                    ProjectName = "Stock takip Projesi",
+                    Description = "Bu proje, şirketlerin stok yönetim süreçlerini izlemelerini ve kontrol etmelerini sağlayan bir stok takip sistemi geliştirmeyi amaçlamaktadır. Kullanıcılar, stok seviyelerini gerçek zamanlı olarak izleyebilir, sipariş yönetimini yapabilir ve stokla ilgili raporlar oluşturabilir.",
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now.AddDays(60),
                     CreatedOn = DateTime.Now,
@@ -219,7 +252,7 @@ namespace ProjectManagement.WebApp.Data
                 {
                     Id = yazilimProjesiProjectGuid,
                     ProjectName = "Yazılım Projesi",
-                    Description = "Bir yazılım ürününün geliştirilmesi",
+                    Description = "Bu yazılım projesi, şirket içi süreçleri optimize etmeyi ve verimliliği artırmayı amaçlayan bir yönetim yazılımı geliştirmeyi içermektedir. Proje, çeşitli modüller aracılığıyla farklı departmanların ihtiyaçlarını karşılayacak ve entegre bir çözüm sunacaktır.",
                     StartDate = new DateTime(2024, 1, 1),
                     CreatedOn = DateTime.Now,
                     EndDate = new DateTime(2024, 12, 31)
@@ -251,14 +284,33 @@ namespace ProjectManagement.WebApp.Data
                new ProjectUserAssociation { ProjectId = stockTrackingProjectGuid, UserId = userIds["user"] },
                new ProjectUserAssociation { ProjectId = stockTrackingProjectGuid, UserId = userIds["project-user-2"] },
                new ProjectUserAssociation { ProjectId = stockTrackingProjectGuid, UserId = userIds["project-user-3"] },
+
+
                new ProjectUserAssociation { ProjectId = yazilimProjesiProjectGuid, UserId = userIds["project-manager"] },
-               new ProjectUserAssociation { ProjectId = yazilimProjesiProjectGuid, UserId = userIds["project-user-2"] }
+               new ProjectUserAssociation { ProjectId = yazilimProjesiProjectGuid, UserId = userIds["project-user-2"] },
+               new ProjectUserAssociation { ProjectId = yazilimProjesiProjectGuid, UserId = userIds["project-user"] },
+               new ProjectUserAssociation { ProjectId = yazilimProjesiProjectGuid, UserId = userIds["project-user-3"] },
+               new ProjectUserAssociation { ProjectId = yazilimProjesiProjectGuid, UserId = userIds["project-user-4"] },
+               new ProjectUserAssociation { ProjectId = yazilimProjesiProjectGuid, UserId = userIds["project-user-5"] },
+               new ProjectUserAssociation { ProjectId = yazilimProjesiProjectGuid, UserId = userIds["project-user-6"] },
+               new ProjectUserAssociation { ProjectId = yazilimProjesiProjectGuid, UserId = userIds["project-user-7"] },
+               new ProjectUserAssociation { ProjectId = yazilimProjesiProjectGuid, UserId = userIds["project-user-8"] },
+               new ProjectUserAssociation { ProjectId = yazilimProjesiProjectGuid, UserId = userIds["project-user-9"] }
             );
 
             builder.Entity<BoardUserAssociation>().HasData(
                 new BoardUserAssociation { AppUserId = userIds["project-user"], BoardId = frontendBoarGuid },
                 new BoardUserAssociation { AppUserId = userIds["project-user-2"], BoardId = frontendBoarGuid },
-                new BoardUserAssociation { AppUserId = userIds["project-user-3"], BoardId = frontendBoarGuid }
+                new BoardUserAssociation { AppUserId = userIds["project-user-3"], BoardId = frontendBoarGuid },
+                new BoardUserAssociation { AppUserId = userIds["project-user"], BoardId = gelistirmeBoardGuid },
+                new BoardUserAssociation { AppUserId = userIds["project-user-2"], BoardId = gelistirmeBoardGuid },
+                new BoardUserAssociation { AppUserId = userIds["project-user-3"], BoardId = gelistirmeBoardGuid },
+                new BoardUserAssociation { AppUserId = userIds["project-user-4"], BoardId = gelistirmeBoardGuid },
+                new BoardUserAssociation { AppUserId = userIds["project-user-5"], BoardId = gelistirmeBoardGuid },
+                new BoardUserAssociation { AppUserId = userIds["project-user-6"], BoardId = gelistirmeBoardGuid },
+                new BoardUserAssociation { AppUserId = userIds["project-user-7"], BoardId = gelistirmeBoardGuid },
+                new BoardUserAssociation { AppUserId = userIds["project-user-8"], BoardId = gelistirmeBoardGuid },
+                new BoardUserAssociation { AppUserId = userIds["project-user-9"], BoardId = gelistirmeBoardGuid }
             );
 
             builder.Entity<Board>().HasData(
@@ -468,7 +520,7 @@ namespace ProjectManagement.WebApp.Data
                     Description = "Müşteri gereksinimlerinin toplanması ve analiz edilmesi",
                     StartDate = new DateTime(2024, 1, 15),
                     DueDate = new DateTime(2024, 1, 29),
-                    Priority =  Models.JobPriority.low,
+                    Priority = Models.JobPriority.low,
                     StageId = analizStageGuid,
                 },
                 new Job
@@ -478,7 +530,7 @@ namespace ProjectManagement.WebApp.Data
                     Description = "Yapılan analiz çalışmalarının sonuçlarının detaylı bir şekilde dokümante edilmesi",
                     StartDate = new DateTime(2024, 1, 16),
                     DueDate = new DateTime(2024, 1, 30),
-                    Priority =  Models.JobPriority.low,
+                    Priority = Models.JobPriority.low,
                     StageId = analizStageGuid
                 },
                 new Job
@@ -498,7 +550,7 @@ namespace ProjectManagement.WebApp.Data
                     Description = "Kullanılacak renklerin ve renk paletinin belirlenmesi",
                     StartDate = new DateTime(2024, 1, 10),
                     DueDate = new DateTime(2024, 1, 24),
-                    Priority =  Models.JobPriority.high,
+                    Priority = Models.JobPriority.high,
                     StageId = tasarimStageGuid
                 },
                 new Job
@@ -518,7 +570,7 @@ namespace ProjectManagement.WebApp.Data
                     Description = "Tasarım aşamasında alınan geri bildirimler doğrultusunda gerekli revizyonların yapılması",
                     StartDate = new DateTime(2024, 1, 12),
                     DueDate = new DateTime(2024, 1, 26),
-                    Priority =  Models.JobPriority.high,
+                    Priority = Models.JobPriority.high,
                     StageId = tasarimStageGuid
                 },
                 new Job
@@ -528,7 +580,7 @@ namespace ProjectManagement.WebApp.Data
                     Description = "Kullanıcı arayüzünde kullanılacak animasyonların hazırlanması ve uygulanması",
                     StartDate = new DateTime(2024, 1, 13),
                     DueDate = new DateTime(2024, 1, 27),
-                    Priority =  Models.JobPriority.high,
+                    Priority = Models.JobPriority.high,
                     StageId = tasarimStageGuid
                 }
             );
@@ -577,6 +629,12 @@ namespace ProjectManagement.WebApp.Data
                 {"project-user", Guid.NewGuid()},
                 {"project-user-2",Guid.NewGuid()},
                 {"project-user-3",Guid.NewGuid()},
+                {"project-user-4",Guid.NewGuid()},
+                {"project-user-5",Guid.NewGuid()},
+                {"project-user-6",Guid.NewGuid()},
+                {"project-user-7",Guid.NewGuid()},
+                {"project-user-8",Guid.NewGuid()},
+                {"project-user-9",Guid.NewGuid()},
             };
 
             AppUser admin = new AppUser()
@@ -674,6 +732,96 @@ namespace ProjectManagement.WebApp.Data
                 EmailConfirmed = false,
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
+            AppUser projectUser4 = new AppUser()
+            {
+                Id = userIds["project-user-4"],
+                FirstName = "Mustafa",
+                LastName = "Turker",
+                BirthDay = DateTime.Now,
+                Gender = Models.Gender.Male,
+                CreatedOn = DateTime.Now,
+                UserName = "mustafaturke123",
+                NormalizedUserName = "MUSTAFATURKER123",
+                Email = "mustafaturker@gmail.com",
+                NormalizedEmail = "MUSTAFATURKER@GMAIL.COM",
+                EmailConfirmed = false,
+                SecurityStamp = Guid.NewGuid().ToString("D")
+            };
+            AppUser projectUser5 = new AppUser()
+            {
+                Id = userIds["project-user-5"],
+                FirstName = "Kemal",
+                LastName = "Cakır",
+                BirthDay = DateTime.Now,
+                Gender = Models.Gender.Male,
+                CreatedOn = DateTime.Now,
+                UserName = "kemalcakir123",
+                NormalizedUserName = "KEMALCAKIR123",
+                Email = "kemalcakir@gmail.com",
+                NormalizedEmail = "KEMALCAKIR@GMAIL.COM",
+                EmailConfirmed = false,
+                SecurityStamp = Guid.NewGuid().ToString("D")
+            };
+            AppUser projectUser6 = new AppUser()
+            {
+                Id = userIds["project-user-6"],
+                FirstName = "Melek",
+                LastName = "Cay",
+                BirthDay = DateTime.Now,
+                Gender = Models.Gender.Male,
+                CreatedOn = DateTime.Now,
+                UserName = "melekcay123",
+                NormalizedUserName = "MELEKCAY123",
+                Email = "melekcay@gmail.com",
+                NormalizedEmail = "MELEKCAY@GMAIL.COM",
+                EmailConfirmed = false,
+                SecurityStamp = Guid.NewGuid().ToString("D")
+            };
+            AppUser projectUser7 = new AppUser()
+            {
+                Id = userIds["project-user-7"],
+                FirstName = "Gamze",
+                LastName = "Kayıs",
+                BirthDay = DateTime.Now,
+                Gender = Models.Gender.Male,
+                CreatedOn = DateTime.Now,
+                UserName = "gamzekayıs123",
+                NormalizedUserName = "gamzekayıs123",
+                Email = "gamzekayıs@gmail.com",
+                NormalizedEmail = "GAMZEKAYIS@GMAIL.COM",
+                EmailConfirmed = false,
+                SecurityStamp = Guid.NewGuid().ToString("D")
+            };
+            AppUser projectUser8 = new AppUser()
+            {
+                Id = userIds["project-user-8"],
+                FirstName = "Rabia",
+                LastName = "Topcu",
+                BirthDay = DateTime.Now,
+                Gender = Models.Gender.Male,
+                CreatedOn = DateTime.Now,
+                UserName = "rabiatopcu123",
+                NormalizedUserName = "RABIATOPCU123",
+                Email = "rabiatopcu@gmail.com",
+                NormalizedEmail = "RABIATOPCU@GMAIL.COM",
+                EmailConfirmed = false,
+                SecurityStamp = Guid.NewGuid().ToString("D")
+            };
+            AppUser projectUser9 = new AppUser()
+            {
+                Id = userIds["project-user-9"],
+                FirstName = "Yasin",
+                LastName = "Gok",
+                BirthDay = DateTime.Now,
+                Gender = Models.Gender.Male,
+                CreatedOn = DateTime.Now,
+                UserName = "yasingok123",
+                NormalizedUserName = "YASINGOK123",
+                Email = "yasingok@gmail.com",
+                NormalizedEmail = "YASINGOK@GMAIL.COM",
+                EmailConfirmed = false,
+                SecurityStamp = Guid.NewGuid().ToString("D")
+            };
 
             CreatePasswordFor(builder,
                 new UserSeedDataModel<AppUser>() { User = admin, Password = "admin123" },
@@ -681,6 +829,12 @@ namespace ProjectManagement.WebApp.Data
                 new UserSeedDataModel<AppUser>() { User = user, Password = "user123" },
                 new UserSeedDataModel<AppUser>() { User = projectUser, Password = "user123" },
                 new UserSeedDataModel<AppUser>() { User = projectUser2, Password = "user123" },
+                new UserSeedDataModel<AppUser>() { User = projectUser4, Password = "user123" },
+                new UserSeedDataModel<AppUser>() { User = projectUser5, Password = "user123" },
+                new UserSeedDataModel<AppUser>() { User = projectUser6, Password = "user123" },
+                new UserSeedDataModel<AppUser>() { User = projectUser7, Password = "user123" },
+                new UserSeedDataModel<AppUser>() { User = projectUser8, Password = "user123" },
+                new UserSeedDataModel<AppUser>() { User = projectUser9, Password = "user123" },
                 new UserSeedDataModel<AppUser>() { User = projectUser3, Password = "user123" });
         }
 
@@ -736,7 +890,13 @@ namespace ProjectManagement.WebApp.Data
                 new IdentityUserRole<Guid>() { RoleId = roleIds["project-user"], UserId = userIds["user"] },
                 new IdentityUserRole<Guid>() { RoleId = roleIds["project-user"], UserId = userIds["project-user"] },
                 new IdentityUserRole<Guid>() { RoleId = roleIds["project-user"], UserId = userIds["project-user-2"] },
-                new IdentityUserRole<Guid>() { RoleId = roleIds["project-user"], UserId = userIds["project-user-3"] }
+                new IdentityUserRole<Guid>() { RoleId = roleIds["project-user"], UserId = userIds["project-user-3"] },
+                new IdentityUserRole<Guid>() { RoleId = roleIds["project-user"], UserId = userIds["project-user-4"] },
+                new IdentityUserRole<Guid>() { RoleId = roleIds["project-user"], UserId = userIds["project-user-5"] },
+                new IdentityUserRole<Guid>() { RoleId = roleIds["project-user"], UserId = userIds["project-user-6"] },
+                new IdentityUserRole<Guid>() { RoleId = roleIds["project-user"], UserId = userIds["project-user-7"] },
+                new IdentityUserRole<Guid>() { RoleId = roleIds["project-user"], UserId = userIds["project-user-8"] },
+                new IdentityUserRole<Guid>() { RoleId = roleIds["project-user"], UserId = userIds["project-user-9"] }
                 );
         }
 
