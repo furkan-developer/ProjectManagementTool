@@ -733,8 +733,10 @@ namespace ProjectManagement.WebApp.Data
             builder.Entity<IdentityUserRole<Guid>>().HasData(
                 new IdentityUserRole<Guid>() { RoleId = roleIds["admin"], UserId = userIds["admin"] },
                 new IdentityUserRole<Guid>() { RoleId = roleIds["project-manager"], UserId = userIds["project-manager"] },
-                new IdentityUserRole<Guid>() { RoleId = roleIds["user"], UserId = userIds["user"] },
-                new IdentityUserRole<Guid>() { RoleId = roleIds["project-user"], UserId = userIds["project-user"] }
+                new IdentityUserRole<Guid>() { RoleId = roleIds["project-user"], UserId = userIds["user"] },
+                new IdentityUserRole<Guid>() { RoleId = roleIds["project-user"], UserId = userIds["project-user"] },
+                new IdentityUserRole<Guid>() { RoleId = roleIds["project-user"], UserId = userIds["project-user-2"] },
+                new IdentityUserRole<Guid>() { RoleId = roleIds["project-user"], UserId = userIds["project-user-3"] }
                 );
         }
 
