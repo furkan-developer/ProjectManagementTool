@@ -111,3 +111,7 @@ header {
   left: 50%;
   translate: -50% -50%;
 }
+
+.d-none{
+  display: none;
+}
