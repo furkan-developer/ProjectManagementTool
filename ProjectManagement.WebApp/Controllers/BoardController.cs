@@ -480,7 +480,7 @@ public class BoardController(AppDbContext appDbContext) : Controller
             var userNames = appDbContext.JobUserAssociations
                 .Where(a => a.JobId == job.Id)
                 .Include(a => a.User)
-                .Select(a => $"{a.User.UserName}")
+                .Select(a => $"{a.User.FirstName} {a.User.LastName}")
                 .ToList();
 
             bool hasConnectionId = Request.Headers.TryGetValue("hub-connection-id", out var hubConnectionId);
