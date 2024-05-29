@@ -102,6 +102,18 @@ connection.on("RecieveComment", function ({ content, fullName }) {
   );
 });
 
+connection.on("DeleteOneSubTask", function ({ subtaskId }) {
+  let allSubTasks = document.querySelectorAll(".sub-task");
+
+  for (let index = 0; index < allSubTasks.length; index++) {
+    let avalibaleSubTaskId = allSubTasks[index].getAttribute("data-sub-task-id");
+    if (avalibaleSubTaskId == subtaskId){
+      allSubTasks[index].remove();
+      break;
+    }
+  }
+});
+
 connection.on("CreateOneSubTask", function ({ id, title, isComplete, jobId }) {
   console.log("Create one Sub task connection");
 
@@ -109,24 +121,24 @@ connection.on("CreateOneSubTask", function ({ id, title, isComplete, jobId }) {
     .getElementById("job-information-container")
     .getAttribute("data-job-id");
 
-  if(currentJobId == jobId){
+  if (currentJobId == jobId) {
     let subTaskListArea = document.getElementById("sub-task-list-area");
     let hasNotSubtaskInfo = subTaskListArea.querySelector(
       "#has-not-sub-task-info"
     );
-  
+
     if (hasNotSubtaskInfo) {
       hasNotSubtaskInfo.classList.add("d-none");
     }
-  
+
     let checkedText = "checked";
     let emptyText = "";
     let beforeendText = "beforeend";
     let afterbeginText = "afterbegin";
-  
+
     console.log("Sub task list area");
     console.log(subTaskListArea);
-  
+
     subTaskListArea.insertAdjacentHTML(
       `${isComplete ? afterbeginText : beforeendText}`,
       `
@@ -246,12 +258,17 @@ function updateSubtaskStatus(element) {
 
 function deleteSubTask(element) {
   let subTaskId = element.closest(".sub-task").getAttribute("data-sub-task-id");
+  let connectionId = document
+    .getElementById("sub-task-add-button")
+    .getAttribute("data-connection-id");
+
   fetch(`${LOCALHOST}board/deleteonesubtask`, {
     method: "DELETE",
     headers: {
       Accept: "application/json",
       "Content-type": "application/json; charset=UTF-8",
       SubTaskId: `${subTaskId}`,
+      "Hub-Connection-Id": `${connectionId}`,
     },
   })
     .then((response) => response.json())

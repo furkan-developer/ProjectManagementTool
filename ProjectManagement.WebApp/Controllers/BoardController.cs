@@ -401,7 +401,9 @@ public class BoardController(AppDbContext appDbContext) : Controller
     }
 
     [HttpDelete]
-    public IActionResult DeleteOneSubTask([FromHeader] Guid subTaskId)
+    public async Task<JsonResult>  DeleteOneSubTask(
+        [FromHeader] Guid subTaskId,
+        [FromServices] IHubContext<CommentHub> commentHubContext)
     {
         bool hasSubjob = appDbContext.SubJobs.Any(s => s.Id == subTaskId);
         if (!hasSubjob)
@@ -410,6 +412,18 @@ public class BoardController(AppDbContext appDbContext) : Controller
         int effectedRowsNumber = appDbContext.SubJobs.Where(s => s.Id == subTaskId).ExecuteDelete();
         if (!(effectedRowsNumber > 0))
             return Json(new { isSuccess = false, errorMessages = "Delete process is failed. Again after time" });
+
+
+        bool hasConnectionId = Request.Headers.TryGetValue("hub-connection-id", out var hubConnectionId);
+        // if (!hasConnectionId)
+        //     return Json(new { isSuccess = false, errorMessages = "Stage of task has updated successfully. however, please refresh to page" });
+
+        await commentHubContext.Clients
+            .AllExcept(hubConnectionId)
+            .SendAsync("DeleteOneSubTask", new
+            {
+                subtaskId = subTaskId
+            });
 
         return Json(new { isSuccess = true });
     }
