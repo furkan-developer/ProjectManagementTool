@@ -58,7 +58,17 @@ subTaskAddButton.addEventListener("click", function (ev) {
           if (!hasNotSubTaskInfoText.classList.contains("d-none"))
             hasNotSubTaskInfoText.classList.add("d-none");
         } else {
-          console.log(result.errorMessages.toString());
+          Toastify({
+            text: `${result.errorMessages.toString()}`,
+            duration: 2000,
+            gravity: "top",
+            position: "center",
+            stopOnFocus: true,
+            style: {
+              background: "linear-gradient(to right, #f6d365, #fda085)",
+            },
+            onClick: function () {},
+          }).showToast();
         }
       })
       .catch((err) => console.log(err));
