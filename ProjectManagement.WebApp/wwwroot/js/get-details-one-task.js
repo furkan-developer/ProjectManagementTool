@@ -184,7 +184,7 @@ function deleteSubTask(element) {
     headers: {
       Accept: "application/json",
       "Content-type": "application/json; charset=UTF-8",
-      "SubTaskId": `${subTaskId}`,
+      SubTaskId: `${subTaskId}`,
     },
   })
     .then((response) => response.json())
@@ -198,3 +198,62 @@ function deleteSubTask(element) {
     })
     .catch((err) => console.log(err));
 }
+
+// UPDATE TASK STATUS
+let updateTaskStatus = document.getElementById("update-task-status");
+updateTaskStatus.addEventListener("click", function (ev) {
+  let taskId = this.getAttribute("data-task-id");
+
+  fetch(`${LOCALHOST}board/updatetaskstatus`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json; charset=UTF-8",
+      TaskId: `${taskId}`,
+    },
+  })
+    .then((response) => response.json())
+    .then((result) => {
+      if (result.isSuccess) {
+        alert("update process has completed successfully");
+
+        while (this.firstChild) {
+          this.removeChild(this.firstChild);
+          // element.firstChild.remove();
+        }
+
+        if (result.data.isComplete) {
+          console.log("İsComplete = true");
+          this.insertAdjacentHTML(
+            "beforeend",
+            `
+            <svg stroke="currentColor" fill="currentColor" stroke-width="0" version="1.1" viewBox="0 0 16 16" height="1em"
+                width="1em" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M15.854 12.854c-0-0-0-0-0-0l-4.854-4.854 4.854-4.854c0-0 0-0 0-0 0.052-0.052 0.090-0.113 0.114-0.178 0.066-0.178 0.028-0.386-0.114-0.529l-2.293-2.293c-0.143-0.143-0.351-0.181-0.529-0.114-0.065 0.024-0.126 0.062-0.178 0.114 0 0-0 0-0 0l-4.854 4.854-4.854-4.854c-0-0-0-0-0-0-0.052-0.052-0.113-0.090-0.178-0.114-0.178-0.066-0.386-0.029-0.529 0.114l-2.293 2.293c-0.143 0.143-0.181 0.351-0.114 0.529 0.024 0.065 0.062 0.126 0.114 0.178 0 0 0 0 0 0l4.854 4.854-4.854 4.854c-0 0-0 0-0 0-0.052 0.052-0.090 0.113-0.114 0.178-0.066 0.178-0.029 0.386 0.114 0.529l2.293 2.293c0.143 0.143 0.351 0.181 0.529 0.114 0.065-0.024 0.126-0.062 0.178-0.114 0-0 0-0 0-0l4.854-4.854 4.854 4.854c0 0 0 0 0 0 0.052 0.052 0.113 0.090 0.178 0.114 0.178 0.066 0.386 0.029 0.529-0.114l2.293-2.293c0.143-0.143 0.181-0.351 0.114-0.529-0.024-0.065-0.062-0.126-0.114-0.178z">
+                </path>
+            </svg>
+            <span class="ps-2">Again raise</span>
+          `
+          );
+        } else {
+          console.log("İsComplete = false");
+          this.insertAdjacentHTML(
+            "beforeend",
+            `
+            <svg stroke="currentColor" fill="currentColor" stroke-width="0" version="1.1" viewBox="0 0 16 16" height="1em"
+            width="1em" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M6.21 14.339l-6.217-6.119 3.084-3.035 3.133 3.083 6.713-6.607 3.084 3.035-9.797 9.643zM1.686 8.22l4.524 4.453 8.104-7.976-1.391-1.369-6.713 6.607-3.133-3.083-1.391 1.369z">
+            </path>
+            </svg>
+            <span class="ps-2">Mark Complete</span>
+          `
+          );
+        }
+      } else {
+        console.log(result.errorMessages);
+      }
+    })
+    .catch((err) => console.log(err));
+});

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Identity.Client;
@@ -26,6 +27,8 @@ public class BoardController(AppDbContext appDbContext) : Controller
         // TODO: Bind workspaceId parameter to route-data
         ViewData["WorkspaceId"] = workspaceId;
         var project = appDbContext.Projects.SingleOrDefault(p => p.Id == workspaceId);
+        if (project == null)
+            return RedirectToAction("Index", "Workspace");
 
         ViewData["WorkspaceName"] = project.ProjectName;
 
@@ -57,7 +60,8 @@ public class BoardController(AppDbContext appDbContext) : Controller
                     DueDate = j.DueDate,
                     Title = j.Title,
                     Priority = j.Priority,
-                    Assignments = j.Users.Select(a => $"{a.User.FirstName} {a.User.LastName}").ToList()
+                    Assignments = j.Users.Select(a => $"{a.User.FirstName} {a.User.LastName}").ToList(),
+                    IsComplete = j.IsComplete
                 }).ToList()
             })
             .ToList();
@@ -269,6 +273,7 @@ public class BoardController(AppDbContext appDbContext) : Controller
             JobId = job.Id,
             Comments = listCommentViewModel,
             SubJobs = listSubJobsViewModel,
+            IsComplete = job.IsComplete,
         };
         return View(viewModel);
     }
@@ -528,4 +533,34 @@ public class BoardController(AppDbContext appDbContext) : Controller
 
         return Json(new { isSuccess = false, errorMessages = errorMessages });
     }
+
+    [HttpPut]
+    public async Task<JsonResult> UpdateTaskStatus(
+        [FromHeader] Guid taskId,
+        [FromServices] IHubContext<GetDetailsOneBoardHub> getDetailsOneBoardHubContext)
+    {
+        var task = appDbContext.Jobs.Include(j => j.Stage).SingleOrDefault(j => j.Id == taskId);
+        if (task is null)
+            return Json(new { isSuccess = false, errorMessages = "The task is not available" });
+
+        task.IsComplete = !task.IsComplete;
+        appDbContext.SaveChanges();
+
+
+        bool hasConnectionId = Request.Headers.TryGetValue("hub-connection-id", out var hubConnectionId);
+        // if (!hasConnectionId)
+        //     return Json(new { isSuccess = false, errorMessages = "Stage of task has updated successfully. however, please refresh to page" });
+
+        await getDetailsOneBoardHubContext.Clients
+            .All
+            .SendAsync("UpdateIsCompleteTaskIcon", new
+            {
+                taskId = task.Id
+            });
+
+
+
+        return Json(new { isSuccess = true, data = new { isComplete = task.IsComplete } });
+    }
+
 }

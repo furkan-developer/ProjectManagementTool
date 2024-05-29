@@ -13,6 +13,7 @@ namespace ProjectManagement.WebApp.Models.ViewModels
         public DateTime StartDate { get; set; } = DateTime.Now;
         public DateTime DueDate { get; set; }
         public Guid JobId { get; set; }
+        public bool IsComplete { get; set; }
 
         public List<ListSubTaskViewModel> SubJobs { get; set; } = new List<ListSubTaskViewModel>();
         public List<ListCommentViewModel> Comments { get; set; } = new List<ListCommentViewModel>();

@@ -11,6 +11,7 @@ namespace ProjectManagement.WebApp.Models.DTOs
         public string Title { get; set; }
         public DateTime DueDate { get; set; }
         public JobPriority Priority { get; set; }
+        public bool IsComplete { get; set; }
         public List<string> Assignments { get; set; }
     }
 }
