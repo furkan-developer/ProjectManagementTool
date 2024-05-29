@@ -61,7 +61,7 @@
                 </div>
                 <input id="sub-task-input-text" type="text" class="form-control">
             </div>
-            <div id="sub-task-add-button" data-task-id="@Model.JobId" class="btn btn-primary">Add</div>
+            <div id="sub-task-add-button" data-task-id="@Model.JobId" data-connection-id="" class="btn btn-primary">Add</div>
         </div>
         <hr>
         <div id="sub-task-list-area" class="sub-tasks-list mb-3 pe-5">
@@ -134,3 +134,4 @@
         </div>
     </div>
 </div>
+<div id="job-information-container" data-job-id="@Model.JobId" class="d-none"></div>

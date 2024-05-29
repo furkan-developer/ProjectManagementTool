@@ -341,7 +341,9 @@ public class BoardController(AppDbContext appDbContext) : Controller
     }
 
     [HttpPost]
-    public JsonResult CreateOneSubTask([FromBody] CreateOneSubTaskViewModel viewModel)
+    public async Task<JsonResult> CreateOneSubTask(
+        [FromBody] CreateOneSubTaskViewModel viewModel,
+        [FromServices] IHubContext<CommentHub> commentHubContext)
     {
         if (ModelState.IsValid)
         {
@@ -358,6 +360,20 @@ public class BoardController(AppDbContext appDbContext) : Controller
 
             appDbContext.SubJobs.Add(subJob);
             appDbContext.SaveChanges();
+
+            bool hasConnectionId = Request.Headers.TryGetValue("hub-connection-id", out var hubConnectionId);
+            // if (!hasConnectionId)
+            //     return Json(new { isSuccess = false, errorMessages = "Stage of task has updated successfully. however, please refresh to page" });
+
+            await commentHubContext.Clients
+                .AllExcept(hubConnectionId)
+                .SendAsync("CreateOneSubTask", new
+                {
+                    id = subJob.Id,
+                    title = subJob.Title,
+                    isComplete = subJob.IsComplete,
+                    jobId = subJob.JobId
+                });
 
             return Json(new { isSuccess = true, subTaskId = subJob.Id });
         }
