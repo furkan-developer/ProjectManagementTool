@@ -9,7 +9,7 @@ namespace ProjectManagement.WebApp.Models.Entities
         public DateTime StartDate { get; set; } = DateTime.Now;
         public DateTime DueDate { get; set; }
         public JobPriority Priority { get; set; }
-        
+        public bool IsComplete { get; set; } = false;
         public Stage? Stage { get; set; }
         public Guid? StageId { get; set; }
         
