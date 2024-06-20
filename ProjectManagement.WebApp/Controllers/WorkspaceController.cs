@@ -9,9 +9,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using ProjectManagement.Domain.Entities.AspIdentity;
 using ProjectManagement.WebApp.Data;
-using ProjectManagement.WebApp.Models.Entities;
-using ProjectManagement.WebApp.Models.Identity;
 using ProjectManagement.WebApp.Models.ViewModels;
 
 namespace ProjectManagement.WebApp.Controllers

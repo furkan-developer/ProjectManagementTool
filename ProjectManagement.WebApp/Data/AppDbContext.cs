@@ -8,9 +8,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using ProjectManagement.Domain;
+using ProjectManagement.Domain.Entities;
+using ProjectManagement.Domain.Entities.AspIdentity;
 using ProjectManagement.WebApp.Helpers.Identity;
-using ProjectManagement.WebApp.Models.Entities;
-using ProjectManagement.WebApp.Models.Identity;
 
 namespace ProjectManagement.WebApp.Data
 {
@@ -389,7 +390,7 @@ namespace ProjectManagement.WebApp.Data
                     Description = "Design user interface for the blog site",
                     StartDate = DateTime.Now,
                     DueDate = DateTime.Now.AddDays(7),
-                    Priority = Models.JobPriority.low,
+                    Priority = JobPriority.low,
                     CreatedOn = DateTime.Now,
                     StageId = supplierPageGuid,
                 },
@@ -400,7 +401,7 @@ namespace ProjectManagement.WebApp.Data
                     Description = "Analyze requirements for the stock tracking project",
                     StartDate = DateTime.Now,
                     DueDate = DateTime.Now.AddDays(14),
-                    Priority = Models.JobPriority.medium,
+                    Priority = JobPriority.medium,
                     CreatedOn = DateTime.Now,
                     StageId = homePageStageGuid,
                 },
@@ -411,7 +412,7 @@ namespace ProjectManagement.WebApp.Data
                     Description = "Depend job",
                     StartDate = DateTime.Now,
                     DueDate = DateTime.Now.AddDays(14),
-                    Priority = Models.JobPriority.high,
+                    Priority = JobPriority.high,
                     CreatedOn = DateTime.Now,
                     StageId = homePageStageGuid,
                 },
@@ -423,7 +424,7 @@ namespace ProjectManagement.WebApp.Data
                     StartDate = new DateTime(2024, 1, 1),
                     CreatedOn = new DateTime(2024, 1, 1),
                     DueDate = new DateTime(2024, 1, 15),
-                    Priority = Models.JobPriority.medium,
+                    Priority = JobPriority.medium,
                     StageId = analizStageGuid,
                 },
                 new Job
@@ -434,7 +435,7 @@ namespace ProjectManagement.WebApp.Data
                     StartDate = new DateTime(2024, 1, 2),
                     CreatedOn = new DateTime(2024, 1, 2),
                     DueDate = new DateTime(2024, 1, 16),
-                    Priority = Models.JobPriority.low,
+                    Priority = JobPriority.low,
                     StageId = analizStageGuid
                 },
                 new Job
@@ -445,7 +446,7 @@ namespace ProjectManagement.WebApp.Data
                     StartDate = new DateTime(2024, 1, 3),
                     CreatedOn = new DateTime(2024, 1, 3),
                     DueDate = new DateTime(2024, 1, 17),
-                    Priority = Models.JobPriority.high,
+                    Priority = JobPriority.high,
                     StageId = tasarimStageGuid,
                 },
                 new Job
@@ -456,7 +457,7 @@ namespace ProjectManagement.WebApp.Data
                     StartDate = new DateTime(2024, 1, 4),
                     CreatedOn = new DateTime(2024, 1, 4),
                     DueDate = new DateTime(2024, 1, 18),
-                    Priority = Models.JobPriority.high,
+                    Priority = JobPriority.high,
                     StageId = tasarimStageGuid,
                 },
                 new Job
@@ -467,7 +468,7 @@ namespace ProjectManagement.WebApp.Data
                     StartDate = new DateTime(2024, 1, 5),
                     CreatedOn = new DateTime(2024, 1, 5),
                     DueDate = new DateTime(2024, 1, 19),
-                    Priority = Models.JobPriority.high,
+                    Priority = JobPriority.high,
                     StageId = kodlamaStageGuid,
                 },
                 new Job
@@ -478,7 +479,7 @@ namespace ProjectManagement.WebApp.Data
                     StartDate = new DateTime(2024, 1, 6),
                     CreatedOn = new DateTime(2024, 1, 6),
                     DueDate = new DateTime(2024, 1, 20),
-                    Priority = Models.JobPriority.medium,
+                    Priority = JobPriority.medium,
                     StageId = kodlamaStageGuid
                 },
                 new Job
@@ -489,7 +490,7 @@ namespace ProjectManagement.WebApp.Data
                     StartDate = new DateTime(2024, 1, 7),
                     CreatedOn = new DateTime(2024, 1, 7),
                     DueDate = new DateTime(2024, 1, 21),
-                    Priority = Models.JobPriority.low,
+                    Priority = JobPriority.low,
                     StageId = testStageGuid
                 },
                 new Job
@@ -500,7 +501,7 @@ namespace ProjectManagement.WebApp.Data
                     StartDate = new DateTime(2024, 1, 8),
                     CreatedOn = new DateTime(2024, 1, 8),
                     DueDate = new DateTime(2024, 1, 22),
-                    Priority = Models.JobPriority.medium,
+                    Priority = JobPriority.medium,
                     StageId = testStageGuid
                 },
                 new Job
@@ -510,7 +511,7 @@ namespace ProjectManagement.WebApp.Data
                     Description = "Mevcut sistem ve iş süreçlerinin detaylı bir şekilde incelenmesi",
                     StartDate = new DateTime(2024, 1, 14),
                     DueDate = new DateTime(2024, 1, 28),
-                    Priority = Models.JobPriority.medium,
+                    Priority = JobPriority.medium,
                     StageId = analizStageGuid
                 },
                 new Job
@@ -520,7 +521,7 @@ namespace ProjectManagement.WebApp.Data
                     Description = "Müşteri gereksinimlerinin toplanması ve analiz edilmesi",
                     StartDate = new DateTime(2024, 1, 15),
                     DueDate = new DateTime(2024, 1, 29),
-                    Priority = Models.JobPriority.low,
+                    Priority = JobPriority.low,
                     StageId = analizStageGuid,
                 },
                 new Job
@@ -530,7 +531,7 @@ namespace ProjectManagement.WebApp.Data
                     Description = "Yapılan analiz çalışmalarının sonuçlarının detaylı bir şekilde dokümante edilmesi",
                     StartDate = new DateTime(2024, 1, 16),
                     DueDate = new DateTime(2024, 1, 30),
-                    Priority = Models.JobPriority.low,
+                    Priority = JobPriority.low,
                     StageId = analizStageGuid
                 },
                 new Job
@@ -540,7 +541,7 @@ namespace ProjectManagement.WebApp.Data
                     Description = "Yazılımın kullanıcı arayüzü tasarımının ilk mockup'ları oluşturulması",
                     StartDate = new DateTime(2024, 1, 9),
                     DueDate = new DateTime(2024, 1, 23),
-                    Priority = Models.JobPriority.medium,
+                    Priority = JobPriority.medium,
                     StageId = tasarimStageGuid,
                 },
                 new Job
@@ -550,7 +551,7 @@ namespace ProjectManagement.WebApp.Data
                     Description = "Kullanılacak renklerin ve renk paletinin belirlenmesi",
                     StartDate = new DateTime(2024, 1, 10),
                     DueDate = new DateTime(2024, 1, 24),
-                    Priority = Models.JobPriority.high,
+                    Priority = JobPriority.high,
                     StageId = tasarimStageGuid
                 },
                 new Job
@@ -560,7 +561,7 @@ namespace ProjectManagement.WebApp.Data
                     Description = "Kullanıcı arayüzünün kullanılabilirliğinin test edilmesi ve geri bildirimlerin alınması",
                     StartDate = new DateTime(2024, 1, 11),
                     DueDate = new DateTime(2024, 1, 25),
-                    Priority = Models.JobPriority.high,
+                    Priority = JobPriority.high,
                     StageId = tasarimStageGuid,
                 },
                 new Job
@@ -570,7 +571,7 @@ namespace ProjectManagement.WebApp.Data
                     Description = "Tasarım aşamasında alınan geri bildirimler doğrultusunda gerekli revizyonların yapılması",
                     StartDate = new DateTime(2024, 1, 12),
                     DueDate = new DateTime(2024, 1, 26),
-                    Priority = Models.JobPriority.high,
+                    Priority = JobPriority.high,
                     StageId = tasarimStageGuid
                 },
                 new Job
@@ -580,7 +581,7 @@ namespace ProjectManagement.WebApp.Data
                     Description = "Kullanıcı arayüzünde kullanılacak animasyonların hazırlanması ve uygulanması",
                     StartDate = new DateTime(2024, 1, 13),
                     DueDate = new DateTime(2024, 1, 27),
-                    Priority = Models.JobPriority.high,
+                    Priority = JobPriority.high,
                     StageId = tasarimStageGuid
                 }
             );
@@ -643,7 +644,7 @@ namespace ProjectManagement.WebApp.Data
                 FirstName = "Furkan",
                 LastName = "Aydin",
                 BirthDay = DateTime.Now,
-                Gender = Models.Gender.Male,
+                Gender = Gender.Male,
                 CreatedOn = DateTime.Now,
                 UserName = "admin",
                 NormalizedUserName = "ADMIN",
@@ -659,7 +660,7 @@ namespace ProjectManagement.WebApp.Data
                 FirstName = "Ali",
                 LastName = "Yildiz ",
                 BirthDay = DateTime.Now,
-                Gender = Models.Gender.Male,
+                Gender = Gender.Male,
                 CreatedOn = DateTime.Now,
                 UserName = "aliyildiz123",
                 NormalizedUserName = "ALIYILDIZ123",
@@ -675,7 +676,7 @@ namespace ProjectManagement.WebApp.Data
                 FirstName = "Ayse",
                 LastName = "Yildiz",
                 BirthDay = DateTime.Now,
-                Gender = Models.Gender.Female,
+                Gender = Gender.Female,
                 CreatedOn = DateTime.Now,
                 UserName = "ayseyildiz123",
                 NormalizedUserName = "AYSEYILDIZ123",
@@ -691,7 +692,7 @@ namespace ProjectManagement.WebApp.Data
                 FirstName = "Esref",
                 LastName = "Yildiz",
                 BirthDay = DateTime.Now,
-                Gender = Models.Gender.Female,
+                Gender = Gender.Female,
                 CreatedOn = DateTime.Now,
                 UserName = "esrefyildiz123",
                 NormalizedUserName = "ESREFYILDIZ123",
@@ -707,7 +708,7 @@ namespace ProjectManagement.WebApp.Data
                 FirstName = "Furkan",
                 LastName = "Aydin",
                 BirthDay = DateTime.Now,
-                Gender = Models.Gender.Male,
+                Gender = Gender.Male,
                 CreatedOn = DateTime.Now,
                 UserName = "furkanaydin123",
                 NormalizedUserName = "FURKANAYDIN123",
@@ -723,7 +724,7 @@ namespace ProjectManagement.WebApp.Data
                 FirstName = "Firat Can",
                 LastName = "Yanan",
                 BirthDay = DateTime.Now,
-                Gender = Models.Gender.Male,
+                Gender = Gender.Male,
                 CreatedOn = DateTime.Now,
                 UserName = "firatcanyanan123",
                 NormalizedUserName = "FIRATCANYANAN123",
@@ -738,7 +739,7 @@ namespace ProjectManagement.WebApp.Data
                 FirstName = "Mustafa",
                 LastName = "Turker",
                 BirthDay = DateTime.Now,
-                Gender = Models.Gender.Male,
+                Gender = Gender.Male,
                 CreatedOn = DateTime.Now,
                 UserName = "mustafaturke123",
                 NormalizedUserName = "MUSTAFATURKER123",
@@ -753,7 +754,7 @@ namespace ProjectManagement.WebApp.Data
                 FirstName = "Kemal",
                 LastName = "Cakır",
                 BirthDay = DateTime.Now,
-                Gender = Models.Gender.Male,
+                Gender = Gender.Male,
                 CreatedOn = DateTime.Now,
                 UserName = "kemalcakir123",
                 NormalizedUserName = "KEMALCAKIR123",
@@ -768,7 +769,7 @@ namespace ProjectManagement.WebApp.Data
                 FirstName = "Melek",
                 LastName = "Cay",
                 BirthDay = DateTime.Now,
-                Gender = Models.Gender.Male,
+                Gender = Gender.Male,
                 CreatedOn = DateTime.Now,
                 UserName = "melekcay123",
                 NormalizedUserName = "MELEKCAY123",
@@ -783,7 +784,7 @@ namespace ProjectManagement.WebApp.Data
                 FirstName = "Gamze",
                 LastName = "Kayıs",
                 BirthDay = DateTime.Now,
-                Gender = Models.Gender.Male,
+                Gender = Gender.Male,
                 CreatedOn = DateTime.Now,
                 UserName = "gamzekayıs123",
                 NormalizedUserName = "gamzekayıs123",
@@ -798,7 +799,7 @@ namespace ProjectManagement.WebApp.Data
                 FirstName = "Rabia",
                 LastName = "Topcu",
                 BirthDay = DateTime.Now,
-                Gender = Models.Gender.Male,
+                Gender = Gender.Male,
                 CreatedOn = DateTime.Now,
                 UserName = "rabiatopcu123",
                 NormalizedUserName = "RABIATOPCU123",
@@ -813,7 +814,7 @@ namespace ProjectManagement.WebApp.Data
                 FirstName = "Yasin",
                 LastName = "Gok",
                 BirthDay = DateTime.Now,
-                Gender = Models.Gender.Male,
+                Gender = Gender.Male,
                 CreatedOn = DateTime.Now,
                 UserName = "yasingok123",
                 NormalizedUserName = "YASINGOK123",

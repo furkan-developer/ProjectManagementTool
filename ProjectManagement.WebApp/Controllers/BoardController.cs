@@ -8,12 +8,12 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Identity.Client;
+using ProjectManagement.Domain.Entities;
+using ProjectManagement.Domain.Entities.AspIdentity;
 using ProjectManagement.WebApp.Data;
 using ProjectManagement.WebApp.Hubs;
 using ProjectManagement.WebApp.Models;
 using ProjectManagement.WebApp.Models.DTOs;
-using ProjectManagement.WebApp.Models.Entities;
-using ProjectManagement.WebApp.Models.Identity;
 using ProjectManagement.WebApp.Models.ViewModels;
 
 namespace ProjectManagement.WebApp.Controllers;

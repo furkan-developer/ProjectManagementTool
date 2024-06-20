@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using ProjectManagement.WebApp.Models.Identity;
+using ProjectManagement.Domain.Entities.AspIdentity;
 
 namespace ProjectManagement.WebApp.Helpers.TagHelpers
 {

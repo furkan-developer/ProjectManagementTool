@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ProjectManagement.WebApp.Models.Entities;
 
 namespace ProjectManagement.WebApp.Models.ViewModels
 {

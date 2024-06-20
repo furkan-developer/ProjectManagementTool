@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using ProjectManagement.Domain.Entities.AspIdentity;
 using ProjectManagement.WebApp.Data;
 using ProjectManagement.WebApp.Hubs;
-using ProjectManagement.WebApp.Models.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
