@@ -10,10 +10,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Identity.Client;
 using ProjectManagement.Domain.Entities;
 using ProjectManagement.Domain.Entities.AspIdentity;
+using ProjectManagement.Domain.DTOs;
 using ProjectManagement.WebApp.Data;
 using ProjectManagement.WebApp.Hubs;
 using ProjectManagement.WebApp.Models;
-using ProjectManagement.WebApp.Models.DTOs;
 using ProjectManagement.WebApp.Models.ViewModels;
 
 namespace ProjectManagement.WebApp.Controllers;

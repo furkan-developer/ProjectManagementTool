@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using ProjectManagement.WebApp.Models.DTOs;
+using ProjectManagement.Domain.DTOs;
 
 namespace ProjectManagement.WebApp.Models.ViewModels
 {
