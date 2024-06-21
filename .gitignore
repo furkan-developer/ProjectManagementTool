@@ -3,6 +3,9 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# Custom ignoration
+TestWebApi/
+
 # dotenv files
 .env
 
