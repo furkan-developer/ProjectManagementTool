@@ -6,6 +6,7 @@ using Microsoft.Data.SqlClient;
 using ProjectManagement.DataAccess.Contracts;
 using ProjectManagement.Domain.DTOs;
 using ProjectManagement.Domain.Entities;
+using ProjectManagement.Domain.Exceptions.ResourceNotFound;
 using ProjectManagement.Services.Contracts;
 
 namespace ProjectManagement.Services.Services
@@ -16,7 +17,7 @@ namespace ProjectManagement.Services.Services
         {
             bool hasProject = projectServices.HasProjectById(projectId);
             if (!hasProject)
-                throw new Exception("Relevent project was not found");
+                throw new ProjectNotFoundException();
 
             var boards = unitOfWork.BoardRepository.GetAllBoardsWithIdsandTitlesByProjectId(projectId);
 
