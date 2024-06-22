@@ -15,6 +15,7 @@ namespace ProjectManagement.DataAccess
     {
         public static void RegisterDataAccessServices(this IServiceCollection services, IConfiguration builder)
         {
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IJobRepository, JobRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<ISubJobRepository, SubJobRepository>();
