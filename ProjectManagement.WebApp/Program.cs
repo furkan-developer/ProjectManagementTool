@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using ProjectManagement.DataAccess;
 using ProjectManagement.Domain.Entities.AspIdentity;
+using ProjectManagement.Services;
 using ProjectManagement.WebApp.Data;
 using ProjectManagement.WebApp.Hubs;
 
@@ -7,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.RegisterServicesServices();
+builder.Services.RegisterDataAccessServices(builder.Configuration);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {

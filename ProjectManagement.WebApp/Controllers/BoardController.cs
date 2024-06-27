@@ -15,30 +15,23 @@ using ProjectManagement.WebApp.Data;
 using ProjectManagement.WebApp.Hubs;
 using ProjectManagement.WebApp.Models;
 using ProjectManagement.WebApp.Models.ViewModels;
+using ProjectManagement.Services.Contracts;
 
 namespace ProjectManagement.WebApp.Controllers;
 
 [Route("[controller]/[action]")]
-public class BoardController(AppDbContext appDbContext) : Controller
+public class BoardController(AppDbContext appDbContext, IBoardService boardService, IProjectService projectService) : Controller
 {
     [Authorize]
     public IActionResult Index([FromQuery] Guid workspaceId)
     {
         // TODO: Bind workspaceId parameter to route-data
-        ViewData["WorkspaceId"] = workspaceId;
-        var project = appDbContext.Projects.SingleOrDefault(p => p.Id == workspaceId);
-        if (project == null)
-            return RedirectToAction("Index", "Workspace");
+        var boards = boardService.GetAllBoardsWithIdsandTitlesByProjectId(workspaceId);
+        string projectName = projectService.GetNameOfProjectById(workspaceId);
 
-        ViewData["WorkspaceName"] = project.ProjectName;
+        ListBoardsViewModel vm = new ListBoardsViewModel() { WorkspaceId = workspaceId, Boards = boards, ProjectName = projectName };
 
-        // gets all boards by specified id of workspace
-        var listBoardsVMs = appDbContext.Boards
-            .Where(b => b.ProjectId == workspaceId)
-            .Select(b => new ListBoardsViewModel { Id = b.Id, Title = b.Title })
-            .ToList();
-
-        return View(listBoardsVMs);
+        return View(vm);
     }
 
     [Authorize]
@@ -401,7 +394,7 @@ public class BoardController(AppDbContext appDbContext) : Controller
     }
 
     [HttpDelete]
-    public async Task<JsonResult>  DeleteOneSubTask(
+    public async Task<JsonResult> DeleteOneSubTask(
         [FromHeader] Guid subTaskId,
         [FromServices] IHubContext<CommentHub> commentHubContext)
     {

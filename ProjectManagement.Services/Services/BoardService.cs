@@ -15,10 +15,8 @@ namespace ProjectManagement.Services.Services
     {
         public List<ListBoardWithIdandTitleDTO> GetAllBoardsWithIdsandTitlesByProjectId(Guid projectId)
         {
-            bool hasProject = projectServices.HasProjectById(projectId);
-            if (!hasProject)
-                throw new ProjectNotFoundException();
-
+            projectServices.HasProjectById(projectId);
+            
             var boards = unitOfWork.BoardRepository.GetAllBoardsWithIdsandTitlesByProjectId(projectId);
 
             return boards.ToList();

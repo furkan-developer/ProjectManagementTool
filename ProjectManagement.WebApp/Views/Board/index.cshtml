@@ -1,5 +1,5 @@
 @using ProjectManagement.WebApp.Helpers.Identity;
-@model List<ListBoardsViewModel>
+@model ListBoardsViewModel
 
 @section StyleSheets {
     <link rel="stylesheet" href="~/css/boards.css" />
@@ -11,7 +11,7 @@
 @section NavigationBar {
     <nav class="nav-links">
         <ul class="left-side">
-            <li class="item page-name">@ViewData["WorkspaceName"]</li>
+            <li class="item page-name">@Model.ProjectName</li>
             <li class="item"><a href="/">Workspaces</a></li>
         </ul>
         <ul class="right-side">
@@ -48,7 +48,7 @@
 @if (User.IsInRole(AppRoles.ProjectManager))
 {
     <div class="btn-position-reference">
-        <a href="/board/createoneboard?workspaceId=@ViewData["WorkspaceId"]&returnUrl=/board/Index?workspaceId=@ViewData["WorkspaceId"]"
+        <a href="/board/createoneboard?workspaceId=@Model.WorkspaceId&returnUrl=/board/Index?workspaceId=@Model.WorkspaceId"
             id="create-board-button" class="create-board-btn">
             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em"
                 xmlns="http://www.w3.org/2000/svg">
@@ -61,7 +61,7 @@
 }
 
 
-@foreach (var item in Model)
+@foreach (var item in Model.Boards)
 {
     <div class="board">
         <h2>@item.Title</h2>

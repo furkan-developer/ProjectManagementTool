@@ -7,6 +7,7 @@ namespace ProjectManagement.Services.Contracts
 {
     public interface IProjectService
     {
-        bool HasProjectById(Guid projectId);
+        void HasProjectById(Guid projectId);
+        string GetNameOfProjectById(Guid projectId);
     }
 }
