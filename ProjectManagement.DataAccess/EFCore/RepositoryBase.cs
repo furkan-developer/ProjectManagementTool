@@ -32,7 +32,7 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
         _context.Set<T>().Where(expression).AsNoTracking() :
         _context.Set<T>().Where(expression);
 
-    public T? GetOne(Expression<Func<T, bool>> expression) =>_context.Set<T>().SingleOrDefault();
+    public T? GetOne(Expression<Func<T, bool>> expression) =>_context.Set<T>().SingleOrDefault(expression);
 
     public bool Has(Expression<Func<T, bool>> expression) => _context.Set<T>().Any(expression);
 
