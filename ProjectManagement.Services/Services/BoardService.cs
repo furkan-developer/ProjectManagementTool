@@ -21,5 +21,16 @@ namespace ProjectManagement.Services.Services
 
             return boards.ToList();
         }
+
+        public Board GetOneBoardByBoardId(Guid boardId) {
+            
+           bool hasBoard = unitOfWork.BoardRepository.HasBoard(b => b.Id == boardId);
+            if(!hasBoard)
+                throw new BoardNotFoundException();
+
+            return unitOfWork.BoardRepository.GetOneBoard(b => b.Id == boardId);
+        }
+    
+        public bool HasBoardByProjectId(Guid projectId) => unitOfWork.BoardRepository.HasBoard(b => b.Id == projectId) ? true : throw new BoardNotFoundException();
     }
 }

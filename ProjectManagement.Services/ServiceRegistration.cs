@@ -15,6 +15,7 @@ namespace ProjectManagement.Services
             services.AddScoped<IBoardService,BoardService>();
             services.AddScoped<IJobService,JobService>();
             services.AddScoped<IProjectService,ProjectService>();
+            services.AddScoped<IStageService,StageService>();
         }
     }
 }

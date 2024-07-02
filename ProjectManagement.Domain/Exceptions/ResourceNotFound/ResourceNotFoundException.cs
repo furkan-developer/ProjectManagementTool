@@ -21,4 +21,11 @@ namespace ProjectManagement.Domain.Exceptions.ResourceNotFound
         public ProjectNotFoundException(string message) : base(message) { }
 
     }
+     public class BoardNotFoundException : ResourceNotFoundException
+    {
+        public BoardNotFoundException() : base("Relevant Board resource was not found") { }
+
+        public BoardNotFoundException(string message) : base(message) { }
+
+    }
 }

@@ -10,6 +10,6 @@ namespace ProjectManagement.WebApp.Models.ViewModels
     {
         public Guid BoardId { get; set; }
         public string BoardName { get; set; }
-        public List<StageDto> stageDtos { get; set; }
+        public List<ListStageWithJobsDTO> stageDtos { get; set; }
     }
 }

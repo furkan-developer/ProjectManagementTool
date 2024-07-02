@@ -20,7 +20,7 @@ using ProjectManagement.Services.Contracts;
 namespace ProjectManagement.WebApp.Controllers;
 
 [Route("[controller]/[action]")]
-public class BoardController(AppDbContext appDbContext, IBoardService boardService, IProjectService projectService) : Controller
+public class BoardController(AppDbContext appDbContext, IBoardService boardService, IProjectService projectService,IStageService stageService) : Controller
 {
     [Authorize]
     public IActionResult Index([FromQuery] Guid workspaceId)
@@ -37,27 +37,10 @@ public class BoardController(AppDbContext appDbContext, IBoardService boardServi
     [Authorize]
     public IActionResult GetDetailsOneBoard([FromQuery] Guid boardId)
     {
-        var board = appDbContext.Boards.SingleOrDefault(b => b.Id == boardId);
+        var board =  boardService.GetOneBoardByBoardId(boardId);
         ViewData["WorkspaceId"] = board.ProjectId;
 
-        List<StageDto> StageDtos = appDbContext.Stages
-            .Where(s => s.BoardId == boardId)
-            .OrderBy(s => s.CreatedOn)
-            .Select(s => new StageDto()
-            {
-                StageId = s.Id,
-                StageName = s.StageName,
-                JobDTOs = s.Jobs.Select(j => new JobDTO()
-                {
-                    JobId = j.Id,
-                    DueDate = j.DueDate,
-                    Title = j.Title,
-                    Priority = j.Priority,
-                    Assignments = j.Users.Select(a => $"{a.User.FirstName} {a.User.LastName}").ToList(),
-                    IsComplete = j.IsComplete
-                }).ToList()
-            })
-            .ToList();
+        List<ListStageWithJobsDTO> StageDtos = stageService.GetAllStagesWithJobs(boardId);
 
         return View(new GetDetailsOneBoardViewModel() { stageDtos = StageDtos, BoardId = boardId, BoardName = board.Title });
     }
